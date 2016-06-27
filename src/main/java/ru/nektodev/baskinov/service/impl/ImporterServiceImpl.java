@@ -26,16 +26,15 @@ public class ImporterServiceImpl implements ImporterService {
 
 	@Override
 	public String importAll() {
-		try {
-			ImportData importData = new ImportData();
-
-			importData.setPath("/homework/vocabulary/en-ru.html");
-			importData.setPublicKey("DhLa7f6nRVrD8AZj9EGmFkyE8goTvQr0vPDb6WsdgtQ%3D");
-
-			wordImporter.doImport(importData);
-		} catch (IOException | ServerException e) {
-			e.printStackTrace();
+		for (Student student : studentRepository.findAll()) {
+			try {
+				wordImporter.doImport(student.getPronunciation().getImportData());
+				wordImporter.doImport(student.getVocabulary().getImportData());
+			} catch (IOException | ServerException e) {
+				e.printStackTrace();
+			}
 		}
+
 		return "OK";
 	}
 
@@ -43,12 +42,16 @@ public class ImporterServiceImpl implements ImporterService {
 		ArrayList<Student> result = new ArrayList<>();
 
 		Student yulia = new Student();
-		yulia.setName("yulia");
+		yulia.setName("aydar");
 
 		Homework aydarVocabulary= new Homework();
 		aydarVocabulary.setId("1");
 		aydarVocabulary.setHomeworkDates(Collections.singletonList(new Date()));
-		aydarVocabulary.setDownloadPath("https://cloud-api.yandex.net:443/v1/disk/public/resources/download?public_key=DhLa7f6nRVrD8AZj9EGmFkyE8goTvQr0vPDb6WsdgtQ%3D&path=%2Fhomework%2Fvocabulary%2Fen-ru.html");
+		ImportData importData = new ImportData();
+
+		importData.setPath("/homework/vocabulary/en-ru.html");
+		importData.setPublicKey("DhLa7f6nRVrD8AZj9EGmFkyE8goTvQr0vPDb6WsdgtQ%3D");
+		aydarVocabulary.setImportData(importData);
 		yulia.setVocabulary(aydarVocabulary);
 
 		Homework aydarPronunciation = null;
@@ -61,9 +64,12 @@ public class ImporterServiceImpl implements ImporterService {
 		assert aydarPronunciation != null;
 		aydarPronunciation.setId("1");
 		aydarPronunciation.setHomeworkDates(Collections.singletonList(new Date()));
-		aydarPronunciation.setDownloadPath("https://cloud-api.yandex.net/v1/disk/public/resources/download?public_key=DhLa7f6nRVrD8AZj9EGmFkyE8goTvQr0vPDb6WsdgtQ%3D&path=%2Fhomework%2Fpronunciation%Yuliya%2Fpractice-and-check.html");
-		yulia.setPronunciation(aydarPronunciation);
+		ImportData importData2 = new ImportData();
 
+		importData2.setPath("/homework/pronunciation/Aydar/practice-and-check.html");
+		importData2.setPublicKey("DhLa7f6nRVrD8AZj9EGmFkyE8goTvQr0vPDb6WsdgtQ%3D");
+		aydarPronunciation.setImportData(importData2);
+		yulia.setPronunciation(aydarPronunciation);
 		result.add(yulia);
 
 		return result;

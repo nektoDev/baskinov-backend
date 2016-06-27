@@ -36,7 +36,6 @@ public class WordImporterImpl implements WordImporter {
 	@Override
 	public void doImport(ImportData data) throws IOException, ServerException {
 		File file = downloadFile(data);
-
 	}
 
 	private File downloadFile(ImportData data) throws IOException, ServerException {
