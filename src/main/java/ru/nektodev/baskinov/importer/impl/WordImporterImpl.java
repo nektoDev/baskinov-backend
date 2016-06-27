@@ -7,4 +7,9 @@ import ru.nektodev.baskinov.importer.WordImporter;
 public class WordImporterImpl implements WordImporter {
 
 
+	@Override
+	public void doImport() {
+	}
+
+
 }
