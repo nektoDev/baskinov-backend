@@ -13,6 +13,7 @@ public class Homework implements Serializable, Cloneable {
 	private String id;
 	private String downloadPath;
 	private List<Date> homeworkDates;
+	private ImportData importData;
 
 	@Override
 	public String toString() {
@@ -20,6 +21,7 @@ public class Homework implements Serializable, Cloneable {
 				"id='" + id + '\'' +
 				", downloadPath='" + downloadPath + '\'' +
 				", homeworkDates=" + homeworkDates +
+				", importData=" + importData +
 				'}';
 	}
 
@@ -27,15 +29,16 @@ public class Homework implements Serializable, Cloneable {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		Homework that = (Homework) o;
-		return Objects.equal(id, that.id) &&
-				Objects.equal(downloadPath, that.downloadPath) &&
-				Objects.equal(homeworkDates, that.homeworkDates);
+		Homework homework = (Homework) o;
+		return Objects.equal(id, homework.id) &&
+				Objects.equal(downloadPath, homework.downloadPath) &&
+				Objects.equal(homeworkDates, homework.homeworkDates) &&
+				Objects.equal(importData, homework.importData);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(id, downloadPath, homeworkDates);
+		return Objects.hashCode(id, downloadPath, homeworkDates, importData);
 	}
 
 	public String getId() {
@@ -65,5 +68,13 @@ public class Homework implements Serializable, Cloneable {
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();
+	}
+
+	public ImportData getImportData() {
+		return importData;
+	}
+
+	public void setImportData(ImportData importData) {
+		this.importData = importData;
 	}
 }
