@@ -60,10 +60,6 @@ public class WordImporterImpl implements WordImporter {
 			w.setPronunciation(pronunciation);
 			result.add(w);
 		});
-		Word w = new Word();
-		w.setWord("sinner");
-		w.setTranslation("грешник");
-		result.add(w);
 
 		return result;
 	}

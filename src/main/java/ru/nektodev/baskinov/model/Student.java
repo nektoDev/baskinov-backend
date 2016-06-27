@@ -9,8 +9,8 @@ public class Student implements Serializable {
 
 	@Id
 	private String name;
-	private Homework vocabulary;
-	private Homework pronunciation;
+	private Task vocabulary;
+	private Task pronunciation;
 
 	@Override
 	public String toString() {
@@ -44,19 +44,19 @@ public class Student implements Serializable {
 		this.name = name;
 	}
 
-	public Homework getVocabulary() {
+	public Task getVocabulary() {
 		return vocabulary;
 	}
 
-	public void setVocabulary(Homework vocabulary) {
+	public void setVocabulary(Task vocabulary) {
 		this.vocabulary = vocabulary;
 	}
 
-	public Homework getPronunciation() {
+	public Task getPronunciation() {
 		return pronunciation;
 	}
 
-	public void setPronunciation(Homework pronunciation) {
+	public void setPronunciation(Task pronunciation) {
 		this.pronunciation = pronunciation;
 	}
 }

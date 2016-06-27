@@ -1,25 +1,19 @@
 package ru.nektodev.baskinov.model;
 
 import com.google.common.base.Objects;
-import org.springframework.data.annotation.Id;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class Homework implements Serializable, Cloneable {
-
-	@Id
-	private String id;
-	private List<Date> homeworkDates;
-	private ImportData importData;
+public class Homework {
+	private Date date;
+	private List<String> words;
 
 	@Override
 	public String toString() {
 		return "Homework{" +
-				"id='" + id + '\'' +
-				", homeworkDates=" + homeworkDates +
-				", importData=" + importData +
+				"date=" + date +
+				", words=" + words +
 				'}';
 	}
 
@@ -28,42 +22,28 @@ public class Homework implements Serializable, Cloneable {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		Homework homework = (Homework) o;
-		return Objects.equal(id, homework.id) &&
-				Objects.equal(homeworkDates, homework.homeworkDates) &&
-				Objects.equal(importData, homework.importData);
+		return Objects.equal(date, homework.date) &&
+				Objects.equal(words, homework.words);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(id, homeworkDates, importData);
+		return Objects.hashCode(date, words);
 	}
 
-	public String getId() {
-		return id;
+	public Date getDate() {
+		return date;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
-	public List<Date> getHomeworkDates() {
-		return homeworkDates;
+	public List<String> getWords() {
+		return words;
 	}
 
-	public void setHomeworkDates(List<Date> homeworkDates) {
-		this.homeworkDates = homeworkDates;
-	}
-
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		return super.clone();
-	}
-
-	public ImportData getImportData() {
-		return importData;
-	}
-
-	public void setImportData(ImportData importData) {
-		this.importData = importData;
+	public void setWords(List<String> words) {
+		this.words = words;
 	}
 }

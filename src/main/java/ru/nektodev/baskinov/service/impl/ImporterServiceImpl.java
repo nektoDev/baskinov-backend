@@ -5,8 +5,6 @@ import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.nektodev.baskinov.importer.WordImporter;
-import ru.nektodev.baskinov.model.Homework;
-import ru.nektodev.baskinov.model.ImportData;
 import ru.nektodev.baskinov.model.Student;
 import ru.nektodev.baskinov.model.Word;
 import ru.nektodev.baskinov.repository.StudentRepository;
@@ -17,9 +15,6 @@ import ru.nektodev.baskinov.util.NullAwareBeanUtilsBean;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -60,15 +55,15 @@ public class ImporterServiceImpl implements ImporterService {
 		return "OK";
 	}
 
-	private List<Student> generateStudents() {
+/*	private List<Student> generateStudents() {
 		ArrayList<Student> result = new ArrayList<>();
 
 		Student yulia = new Student();
 		yulia.setName("aydar");
 
-		Homework aydarVocabulary= new Homework();
+		Task aydarVocabulary= new Task();
 		aydarVocabulary.setId("1");
-		aydarVocabulary.setHomeworkDates(Collections.singletonList(new Date()));
+//		aydarVocabulary.setHomeworkDates(Collections.singletonList(new Date()));
 		ImportData importData = new ImportData();
 
 		importData.setPath("/homework/vocabulary/en-ru.html");
@@ -76,16 +71,16 @@ public class ImporterServiceImpl implements ImporterService {
 		aydarVocabulary.setImportData(importData);
 		yulia.setVocabulary(aydarVocabulary);
 
-		Homework aydarPronunciation = null;
+		Task aydarPronunciation = null;
 		try {
-			aydarPronunciation = (Homework) aydarVocabulary.clone();
+			aydarPronunciation = (Task) aydarVocabulary.clone();
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}
 
 		assert aydarPronunciation != null;
 		aydarPronunciation.setId("1");
-		aydarPronunciation.setHomeworkDates(Collections.singletonList(new Date()));
+//		aydarPronunciation.setHomeworkDates(Collections.singletonList(new Date()));
 		ImportData importData2 = new ImportData();
 
 		importData2.setPath("/homework/pronunciation/Aydar/practice-and-check.html");
@@ -95,5 +90,5 @@ public class ImporterServiceImpl implements ImporterService {
 		result.add(yulia);
 
 		return result;
-	}
+	}*/
 }
