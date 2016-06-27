@@ -33,6 +33,7 @@ dependencies {
 
 	compile group: 'com.google.guava', name: 'guava', version: '11.0.2'
 	compile group: 'com.yandex.android', name: 'disk-restapi-sdk', version: '1.03'
+	compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.2'
 	compile group: 'org.jsoup', name: 'jsoup', version: '1.9.2'
 }
 

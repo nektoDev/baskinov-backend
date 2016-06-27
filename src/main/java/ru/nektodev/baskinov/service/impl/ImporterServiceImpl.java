@@ -1,6 +1,7 @@
 package ru.nektodev.baskinov.service.impl;
 
 import com.yandex.disk.rest.exceptions.ServerException;
+import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.nektodev.baskinov.importer.WordImporter;
@@ -11,8 +12,11 @@ import ru.nektodev.baskinov.model.Word;
 import ru.nektodev.baskinov.repository.StudentRepository;
 import ru.nektodev.baskinov.repository.WordRepository;
 import ru.nektodev.baskinov.service.ImporterService;
+import ru.nektodev.baskinov.util.NullAwareBeanUtilsBean;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -29,19 +33,30 @@ public class ImporterServiceImpl implements ImporterService {
 	@Autowired
 	private WordRepository wordRepository;
 
+	private BeanUtilsBean notNullBean;
+
+	@PostConstruct
+	private void init(){
+		notNullBean = new NullAwareBeanUtilsBean();
+	}
+
 	@Override
 	public String importAll() {
 		for (Student student : studentRepository.findAll()) {
 			try {
 				List<Word> words = wordImporter.doImport(student);
-				wordRepository.save(words);
-			} catch (IOException | ServerException e) {
+
+				for (Word word : words) {
+					Word foundedWord = wordRepository.findOne(word.getWord());
+					if (foundedWord != null) {
+						notNullBean.copyProperties(word, foundedWord);
+					}
+					wordRepository.save(word);
+				}
+			} catch (IOException | ServerException | InvocationTargetException | IllegalAccessException e) {
 				e.printStackTrace();
 			}
 		}
-
-
-
 		return "OK";
 	}
 
