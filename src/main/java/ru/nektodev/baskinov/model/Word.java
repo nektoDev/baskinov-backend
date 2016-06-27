@@ -15,7 +15,6 @@ import static com.google.common.base.Objects.equal;
 public class Word implements Serializable {
 
 	@Id
-	private String id;
 	private String word;
 	private String pronunciation;
 	private String translation;
@@ -24,13 +23,23 @@ public class Word implements Serializable {
 	private boolean isAnswerShow;
 
 	@Override
+	public String toString() {
+		return "Word{" +
+				"word='" + word + '\'' +
+				", pronunciation='" + pronunciation + '\'' +
+				", translation='" + translation + '\'' +
+				", checked=" + checked +
+				", isAnswerShow=" + isAnswerShow +
+				'}';
+	}
+
+	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		Word word1 = (Word) o;
 		return checked == word1.checked &&
 				isAnswerShow == word1.isAnswerShow &&
-				equal(id, word1.id) &&
 				equal(word, word1.word) &&
 				equal(pronunciation, word1.pronunciation) &&
 				equal(translation, word1.translation);
@@ -38,15 +47,7 @@ public class Word implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(id, word, pronunciation, translation, checked, isAnswerShow);
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
+		return Objects.hashCode(word, pronunciation, translation, checked, isAnswerShow);
 	}
 
 	public String getWord() {

@@ -7,7 +7,9 @@ import ru.nektodev.baskinov.importer.WordImporter;
 import ru.nektodev.baskinov.model.Homework;
 import ru.nektodev.baskinov.model.ImportData;
 import ru.nektodev.baskinov.model.Student;
+import ru.nektodev.baskinov.model.Word;
 import ru.nektodev.baskinov.repository.StudentRepository;
+import ru.nektodev.baskinov.repository.WordRepository;
 import ru.nektodev.baskinov.service.ImporterService;
 
 import java.io.IOException;
@@ -24,16 +26,21 @@ public class ImporterServiceImpl implements ImporterService {
 	@Autowired
 	private StudentRepository studentRepository;
 
+	@Autowired
+	private WordRepository wordRepository;
+
 	@Override
 	public String importAll() {
 		for (Student student : studentRepository.findAll()) {
 			try {
-				wordImporter.doImport(student.getPronunciation().getImportData());
-				wordImporter.doImport(student.getVocabulary().getImportData());
+				List<Word> words = wordImporter.doImport(student);
+				wordRepository.save(words);
 			} catch (IOException | ServerException e) {
 				e.printStackTrace();
 			}
 		}
+
+
 
 		return "OK";
 	}
