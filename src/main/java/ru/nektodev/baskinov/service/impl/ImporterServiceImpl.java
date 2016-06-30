@@ -1,7 +1,6 @@
 package ru.nektodev.baskinov.service.impl;
 
 import com.yandex.disk.rest.exceptions.ServerException;
-import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.nektodev.baskinov.importer.HomeworkImporter;
@@ -10,9 +9,7 @@ import ru.nektodev.baskinov.model.Word;
 import ru.nektodev.baskinov.repository.StudentRepository;
 import ru.nektodev.baskinov.repository.WordRepository;
 import ru.nektodev.baskinov.service.ImporterService;
-import ru.nektodev.baskinov.util.NullAwareBeanUtilsBean;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
