@@ -15,7 +15,7 @@ public class ImporterFacade {
 
 	@RequestMapping(value = "/start", method = RequestMethod.GET)
 	public String getVocabulary(){
-		return importer.importAll();
+		return importer.importAllStudents();
 	}
 
 }

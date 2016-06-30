@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Homework {
 	private Date date;
-	private List<String> words;
+	private List<Word> words;
 
 	@Override
 	public String toString() {
@@ -39,11 +39,11 @@ public class Homework {
 		this.date = date;
 	}
 
-	public List<String> getWords() {
+	public List<Word> getWords() {
 		return words;
 	}
 
-	public void setWords(List<String> words) {
+	public void setWords(List<Word> words) {
 		this.words = words;
 	}
 }

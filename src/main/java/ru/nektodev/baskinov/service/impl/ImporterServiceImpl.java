@@ -4,6 +4,7 @@ import com.yandex.disk.rest.exceptions.ServerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.nektodev.baskinov.importer.HomeworkImporter;
+import ru.nektodev.baskinov.model.Homework;
 import ru.nektodev.baskinov.model.Student;
 import ru.nektodev.baskinov.model.Word;
 import ru.nektodev.baskinov.repository.StudentRepository;
@@ -11,6 +12,8 @@ import ru.nektodev.baskinov.repository.WordRepository;
 import ru.nektodev.baskinov.service.ImporterService;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,17 +29,45 @@ public class ImporterServiceImpl implements ImporterService {
 	private WordRepository wordRepository;
 
 	@Override
-	public String importAll() {
+	public String importAllStudents() {
 		for (Student student : studentRepository.findAll()) {
 			try {
-				importVocabularyHomework(student);
-				importPronunciationHomework(student);
+				importHomework(student);
 			} catch (IOException | ServerException e) {
 				e.printStackTrace();
+				return "ERROR";
 			}
 		}
 
 		return "OK";
+	}
+
+	@Override
+	public String importStudentHomework(String studentId) {
+
+		Student student = studentRepository.findOne(studentId);
+		try {
+			importHomework(student);
+		} catch (IOException | ServerException e) {
+			e.printStackTrace();
+			return "ERROR";
+		}
+
+		return "OK";
+	}
+
+	private void importHomework(Student student) throws IOException, ServerException {
+		if (student.getPronunciation().getHomeworks() == null) {
+			student.getPronunciation().setHomeworks(new ArrayList<>());
+			studentRepository.save(student);
+		}
+		if (student.getVocabulary().getHomeworks() == null) {
+			student.getVocabulary().setHomeworks(new ArrayList<>());
+			studentRepository.save(student);
+		}
+
+		importVocabularyHomework(student);
+		importPronunciationHomework(student);
 	}
 
 	private void importPronunciationHomework(Student student) throws IOException, ServerException {
@@ -52,7 +83,17 @@ public class ImporterServiceImpl implements ImporterService {
 			word.setPronunciation(pronunciation);
 			saveWords.put(title, word);
 		});
+
+		student.getPronunciation().getHomeworks().add(getHomework(saveWords));
+		studentRepository.save(student);
 		wordRepository.save(saveWords.values());
+	}
+
+	private Homework getHomework(Map<String, Word> saveWords) {
+		Homework homework = new Homework();
+		homework.setDate(new Date());
+		homework.setWords(new ArrayList<>(saveWords.values()));
+		return homework;
 	}
 
 	private void importVocabularyHomework(Student student) throws IOException, ServerException {
@@ -68,6 +109,9 @@ public class ImporterServiceImpl implements ImporterService {
 			word.setTranslation(translation);
 			saveWords.put(title, word);
 		});
+
+		student.getVocabulary().getHomeworks().add(getHomework(saveWords));
+
 		wordRepository.save(saveWords.values());
 	}
 
