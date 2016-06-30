@@ -27,39 +27,48 @@ public class ImporterServiceImpl implements ImporterService {
 
 	@Override
 	public String importAll() {
-		Map<String, Word> saveWords = new HashMap<>();
-
 		for (Student student : studentRepository.findAll()) {
 			try {
-				Map<String, String> vocabularyMap = homeworkImporter.doImport(student.getVocabulary().getImportParams());
-
-				vocabularyMap.forEach((translation, title) -> {
-					Word word = getWord(saveWords, title);
-					if (word == null)
-						word = new Word(title);
-
-					word.setTranslation(translation);
-					saveWords.put(title, word);
-				});
-
-				Map<String, String> pronunciationMap = homeworkImporter.doImport(student.getVocabulary().getImportParams());
-
-				pronunciationMap.forEach((translation, title) -> {
-					Word word = getWord(saveWords, title);
-					if (word == null)
-						word = new Word(title);
-
-					word.setPronunciation(translation);
-					saveWords.put(title, word);
-				});
-
+				importVocabularyHomework(student);
+				importPronunciationHomework(student);
 			} catch (IOException | ServerException e) {
 				e.printStackTrace();
 			}
 		}
 
-		wordRepository.save(saveWords.values());
 		return "OK";
+	}
+
+	private void importPronunciationHomework(Student student) throws IOException, ServerException {
+		Map<String, Word> saveWords = new HashMap<>();
+
+		Map<String, String> pronunciationMap = homeworkImporter.doImport(student.getPronunciation().getImportParams());
+
+		pronunciationMap.forEach((title, pronunciation) -> {
+			Word word = getWord(saveWords, title);
+			if (word == null)
+				word = new Word(title);
+
+			word.setPronunciation(pronunciation);
+			saveWords.put(title, word);
+		});
+		wordRepository.save(saveWords.values());
+	}
+
+	private void importVocabularyHomework(Student student) throws IOException, ServerException {
+		Map<String, Word> saveWords = new HashMap<>();
+
+		Map<String, String> vocabularyMap = homeworkImporter.doImport(student.getVocabulary().getImportParams());
+
+		vocabularyMap.forEach((title, translation) -> {
+			Word word = getWord(saveWords, title);
+			if (word == null)
+				word = new Word(title);
+
+			word.setTranslation(translation);
+			saveWords.put(title, word);
+		});
+		wordRepository.save(saveWords.values());
 	}
 
 	private Word getWord(Map<String, Word> saveWords, String title) {
@@ -71,41 +80,4 @@ public class ImporterServiceImpl implements ImporterService {
 		}
 		return word;
 	}
-
-/*	private List<Student> generateStudents() {
-		ArrayList<Student> result = new ArrayList<>();
-
-		Student yulia = new Student();
-		yulia.setName("aydar");
-
-		Task aydarVocabulary= new Task();
-		aydarVocabulary.setId("1");
-//		aydarVocabulary.setHomeworkDates(Collections.singletonList(new Date()));
-		ImportParams importData = new ImportParams();
-
-		importData.setPath("/homework/vocabulary/en-ru.html");
-		importData.setPublicKey("DhLa7f6nRVrD8AZj9EGmFkyE8goTvQr0vPDb6WsdgtQ%3D");
-		aydarVocabulary.setImportParams(importData);
-		yulia.setVocabulary(aydarVocabulary);
-
-		Task aydarPronunciation = null;
-		try {
-			aydarPronunciation = (Task) aydarVocabulary.clone();
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-		}
-
-		assert aydarPronunciation != null;
-		aydarPronunciation.setId("1");
-//		aydarPronunciation.setHomeworkDates(Collections.singletonList(new Date()));
-		ImportParams importData2 = new ImportParams();
-
-		importData2.setPath("/homework/pronunciation/Aydar/practice-and-check.html");
-		importData2.setPublicKey("DhLa7f6nRVrD8AZj9EGmFkyE8goTvQr0vPDb6WsdgtQ%3D");
-		aydarPronunciation.setImportParams(importData2);
-		yulia.setPronunciation(aydarPronunciation);
-		result.add(yulia);
-
-		return result;
-	}*/
 }
