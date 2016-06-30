@@ -4,7 +4,7 @@ import com.yandex.disk.rest.exceptions.ServerException;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.nektodev.baskinov.importer.WordImporter;
+import ru.nektodev.baskinov.importer.HomeworkImporter;
 import ru.nektodev.baskinov.model.Student;
 import ru.nektodev.baskinov.model.Word;
 import ru.nektodev.baskinov.repository.StudentRepository;
@@ -14,13 +14,13 @@ import ru.nektodev.baskinov.util.NullAwareBeanUtilsBean;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class ImporterServiceImpl implements ImporterService {
 	@Autowired
-	private WordImporter wordImporter;
+	private HomeworkImporter homeworkImporter;
 
 	@Autowired
 	private StudentRepository studentRepository;
@@ -28,31 +28,51 @@ public class ImporterServiceImpl implements ImporterService {
 	@Autowired
 	private WordRepository wordRepository;
 
-	private BeanUtilsBean notNullBean;
-
-	@PostConstruct
-	private void init(){
-		notNullBean = new NullAwareBeanUtilsBean();
-	}
-
 	@Override
 	public String importAll() {
+		Map<String, Word> saveWords = new HashMap<>();
+
 		for (Student student : studentRepository.findAll()) {
 			try {
-				List<Word> words = wordImporter.doImport(student);
+				Map<String, String> vocabularyMap = homeworkImporter.doImport(student.getVocabulary().getImportParams());
 
-				for (Word word : words) {
-					Word foundedWord = wordRepository.findOne(word.getWord());
-					if (foundedWord != null) {
-						notNullBean.copyProperties(word, foundedWord);
-					}
-					wordRepository.save(word);
-				}
-			} catch (IOException | ServerException | InvocationTargetException | IllegalAccessException e) {
+				vocabularyMap.forEach((translation, title) -> {
+					Word word = getWord(saveWords, title);
+					if (word == null)
+						word = new Word(title);
+
+					word.setTranslation(translation);
+					saveWords.put(title, word);
+				});
+
+				Map<String, String> pronunciationMap = homeworkImporter.doImport(student.getVocabulary().getImportParams());
+
+				pronunciationMap.forEach((translation, title) -> {
+					Word word = getWord(saveWords, title);
+					if (word == null)
+						word = new Word(title);
+
+					word.setPronunciation(translation);
+					saveWords.put(title, word);
+				});
+
+			} catch (IOException | ServerException e) {
 				e.printStackTrace();
 			}
 		}
+
+		wordRepository.save(saveWords.values());
 		return "OK";
+	}
+
+	private Word getWord(Map<String, Word> saveWords, String title) {
+		Word word;
+		if (saveWords.containsKey(title)) {
+			word = saveWords.get(title);
+		} else {
+			word = wordRepository.findOne(title);
+		}
+		return word;
 	}
 
 /*	private List<Student> generateStudents() {
@@ -64,11 +84,11 @@ public class ImporterServiceImpl implements ImporterService {
 		Task aydarVocabulary= new Task();
 		aydarVocabulary.setId("1");
 //		aydarVocabulary.setHomeworkDates(Collections.singletonList(new Date()));
-		ImportData importData = new ImportData();
+		ImportParams importData = new ImportParams();
 
 		importData.setPath("/homework/vocabulary/en-ru.html");
 		importData.setPublicKey("DhLa7f6nRVrD8AZj9EGmFkyE8goTvQr0vPDb6WsdgtQ%3D");
-		aydarVocabulary.setImportData(importData);
+		aydarVocabulary.setImportParams(importData);
 		yulia.setVocabulary(aydarVocabulary);
 
 		Task aydarPronunciation = null;
@@ -81,11 +101,11 @@ public class ImporterServiceImpl implements ImporterService {
 		assert aydarPronunciation != null;
 		aydarPronunciation.setId("1");
 //		aydarPronunciation.setHomeworkDates(Collections.singletonList(new Date()));
-		ImportData importData2 = new ImportData();
+		ImportParams importData2 = new ImportParams();
 
 		importData2.setPath("/homework/pronunciation/Aydar/practice-and-check.html");
 		importData2.setPublicKey("DhLa7f6nRVrD8AZj9EGmFkyE8goTvQr0vPDb6WsdgtQ%3D");
-		aydarPronunciation.setImportData(importData2);
+		aydarPronunciation.setImportParams(importData2);
 		yulia.setPronunciation(aydarPronunciation);
 		result.add(yulia);
 

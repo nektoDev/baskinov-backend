@@ -9,18 +9,18 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
-import ru.nektodev.baskinov.importer.WordImporter;
-import ru.nektodev.baskinov.model.ImportData;
-import ru.nektodev.baskinov.model.Student;
-import ru.nektodev.baskinov.model.Word;
+import ru.nektodev.baskinov.importer.HomeworkImporter;
+import ru.nektodev.baskinov.model.ImportParams;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
-public class WordImporterImpl implements WordImporter {
+public class HomeworkImporterImpl implements HomeworkImporter {
 
 	public static final Credentials CREDENTIALS = new Credentials("", "");
 	private static File TEMP_DIR = new File("/Users/nektodev/Downloads/temp");
@@ -40,28 +40,10 @@ public class WordImporterImpl implements WordImporter {
 	}
 
 	@Override
-	public List<Word> doImport(Student student) throws IOException, ServerException {
-		List<Word> result = new ArrayList<>();
+	public Map<String, String> doImport(ImportParams params) throws IOException, ServerException {
+		File vocabularyFile = downloadFile(params);
 
-		File vocabularyFile = downloadFile(student.getVocabulary().getImportData(), "voc_"+student.getName());
-		Map<String, String> vocabularyWordsMap = parseFile(vocabularyFile);
-		vocabularyWordsMap.forEach((word, translation) -> {
-			Word w = new Word();
-			w.setWord(word);
-			w.setTranslation(translation);
-			result.add(w);
-		});
-
-		File pronunciationFile = downloadFile(student.getPronunciation().getImportData(), "pron_"+student.getName());
-		Map<String, String> pronunciationWordMap = parseFile(pronunciationFile);
-		pronunciationWordMap.forEach((word, pronunciation) -> {
-			Word w = new Word();
-			w.setWord(word);
-			w.setPronunciation(pronunciation);
-			result.add(w);
-		});
-
-		return result;
+		return parseFile(vocabularyFile);
 	}
 
 	private Map<String, String> parseFile(File file) throws IOException {
@@ -79,11 +61,11 @@ public class WordImporterImpl implements WordImporter {
 		return result;
 	}
 
-	private File downloadFile(ImportData data, String name) throws IOException, ServerException {
-		File saveTo = new File(TEMP_DIR, "name"+ new Date().getTime());
+	private File downloadFile(ImportParams params) throws IOException, ServerException {
+		File saveTo = new File(TEMP_DIR, "temp_"+ new Date().getTime());
 
-		client.downloadPublicResource(data.getPublicKey(),
-				data.getPath(),
+		client.downloadPublicResource(params.getPublicKey(),
+				params.getPath(),
 				saveTo,
 				null);
 		return saveTo;

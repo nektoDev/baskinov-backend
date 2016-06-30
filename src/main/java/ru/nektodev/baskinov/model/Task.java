@@ -11,11 +11,11 @@ public class Task implements Serializable, Cloneable {
 	@Id
 	private String id;
 	private List<Homework> homeworks;
-	private ImportData importData;
+	private ImportParams importParams;
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(id, homeworks, importData);
+		return Objects.hashCode(id, homeworks, importParams);
 	}
 
 	@Override
@@ -23,7 +23,7 @@ public class Task implements Serializable, Cloneable {
 		return "Task{" +
 				"id='" + id + '\'' +
 				", homeworks=" + homeworks +
-				", importData=" + importData +
+				", importParams=" + importParams +
 				'}';
 	}
 
@@ -33,7 +33,7 @@ public class Task implements Serializable, Cloneable {
 		if (o == null || getClass() != o.getClass()) return false;
 		Task task = (Task) o;
 		return Objects.equal(id, task.id) &&
-				Objects.equal(importData, task.importData);
+				Objects.equal(importParams, task.importParams);
 	}
 
 
@@ -45,12 +45,12 @@ public class Task implements Serializable, Cloneable {
 		this.id = id;
 	}
 
-	public ImportData getImportData() {
-		return importData;
+	public ImportParams getImportParams() {
+		return importParams;
 	}
 
-	public void setImportData(ImportData importData) {
-		this.importData = importData;
+	public void setImportParams(ImportParams importParams) {
+		this.importParams = importParams;
 	}
 
 	public void setHomeworks(List<Homework> homeworks) {

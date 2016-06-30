@@ -4,13 +4,13 @@ import com.google.common.base.Objects;
 
 import java.io.Serializable;
 
-public class ImportData implements Serializable{
+public class ImportParams implements Serializable{
 	private String publicKey;
 	private String path;
 
 	@Override
 	public String toString() {
-		return "ImportData{" +
+		return "ImportParams{" +
 				"publicKey='" + publicKey + '\'' +
 				", path='" + path + '\'' +
 				'}';
@@ -20,7 +20,7 @@ public class ImportData implements Serializable{
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		ImportData that = (ImportData) o;
+		ImportParams that = (ImportParams) o;
 		return Objects.equal(publicKey, that.publicKey) &&
 				Objects.equal(path, that.path);
 	}

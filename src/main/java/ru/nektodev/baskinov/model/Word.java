@@ -22,6 +22,13 @@ public class Word implements Serializable {
 	private boolean checked;
 	private boolean isAnswerShow;
 
+	public Word() {
+	}
+
+	public Word(String word) {
+		this.word = word;
+	}
+
 	@Override
 	public String toString() {
 		return "Word{" +
