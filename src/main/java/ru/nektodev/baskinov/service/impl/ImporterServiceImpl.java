@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.nektodev.baskinov.importer.HomeworkImporter;
 import ru.nektodev.baskinov.model.Homework;
+import ru.nektodev.baskinov.model.ImportData;
 import ru.nektodev.baskinov.model.Student;
 import ru.nektodev.baskinov.model.Word;
 import ru.nektodev.baskinov.repository.StudentRepository;
@@ -30,8 +31,11 @@ public class ImporterServiceImpl implements ImporterService {
 
 	@Override
 	public String importAllStudents() {
+
 		for (Student student : studentRepository.findAll()) {
 			try {
+				student.getVocabulary().setHomeworks(new ArrayList<>());
+				student.getPronunciation().setHomeworks(new ArrayList<>());
 				importHomework(student);
 			} catch (IOException | ServerException e) {
 				e.printStackTrace();
@@ -39,7 +43,7 @@ public class ImporterServiceImpl implements ImporterService {
 			}
 		}
 
-		return "OK";
+		return studentRepository.findAll().toString();
 	}
 
 	@Override
@@ -73,7 +77,8 @@ public class ImporterServiceImpl implements ImporterService {
 	private void importPronunciationHomework(Student student) throws IOException, ServerException {
 		Map<String, Word> saveWords = new HashMap<>();
 
-		Map<String, String> pronunciationMap = homeworkImporter.doImport(student.getPronunciation().getImportParams());
+		ImportData importData = homeworkImporter.doImport(student.getPronunciation().getImportParams());
+		Map<String, String> pronunciationMap = importData.getResult();
 
 		pronunciationMap.forEach((title, pronunciation) -> {
 			Word word = getWord(saveWords, title);
@@ -99,7 +104,8 @@ public class ImporterServiceImpl implements ImporterService {
 	private void importVocabularyHomework(Student student) throws IOException, ServerException {
 		Map<String, Word> saveWords = new HashMap<>();
 
-		Map<String, String> vocabularyMap = homeworkImporter.doImport(student.getVocabulary().getImportParams());
+		ImportData importData = homeworkImporter.doImport(student.getVocabulary().getImportParams());
+		Map<String, String> vocabularyMap = importData.getResult();
 
 		vocabularyMap.forEach((title, translation) -> {
 			Word word = getWord(saveWords, title);

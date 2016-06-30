@@ -10,6 +10,7 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.nektodev.baskinov.importer.HomeworkImporter;
+import ru.nektodev.baskinov.model.ImportData;
 import ru.nektodev.baskinov.model.ImportParams;
 
 import javax.annotation.PostConstruct;
@@ -46,10 +47,13 @@ public class HomeworkImporterImpl implements HomeworkImporter {
 	}
 
 	@Override
-	public Map<String, String> doImport(ImportParams params) throws IOException, ServerException {
-		File vocabularyFile = downloadFile(params);
+	public ImportData doImport(ImportParams params) throws IOException, ServerException {
+		ImportData result = new ImportData();
 
-		return parseFile(vocabularyFile);
+		File vocabularyFile = downloadFile(params);
+		result.setResult(parseFile(vocabularyFile));
+		result.setFileHash("1111");
+		return result;
 	}
 
 	private Map<String, String> parseFile(File file) throws IOException {
