@@ -4,10 +4,7 @@ import com.yandex.disk.rest.exceptions.ServerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.nektodev.baskinov.importer.HomeworkImporter;
-import ru.nektodev.baskinov.model.Homework;
-import ru.nektodev.baskinov.model.ImportData;
-import ru.nektodev.baskinov.model.Student;
-import ru.nektodev.baskinov.model.Word;
+import ru.nektodev.baskinov.model.*;
 import ru.nektodev.baskinov.repository.StudentRepository;
 import ru.nektodev.baskinov.repository.WordRepository;
 import ru.nektodev.baskinov.service.ImporterService;
@@ -31,11 +28,8 @@ public class ImporterServiceImpl implements ImporterService {
 
 	@Override
 	public String importAllStudents() {
-
 		for (Student student : studentRepository.findAll()) {
 			try {
-				student.getVocabulary().setHomeworks(new ArrayList<>());
-				student.getPronunciation().setHomeworks(new ArrayList<>());
 				importHomework(student);
 			} catch (IOException | ServerException e) {
 				e.printStackTrace();
@@ -80,6 +74,14 @@ public class ImporterServiceImpl implements ImporterService {
 		ImportData importData = homeworkImporter.doImport(student.getPronunciation().getImportParams());
 		Map<String, String> pronunciationMap = importData.getResult();
 
+		boolean homeworkImported = student.getPronunciation().getHomeworks()
+				.stream()
+				.anyMatch(homework -> importData.getFileHash().equalsIgnoreCase(homework.getFileHash()));
+
+		if (homeworkImported) {
+			return;
+		}
+
 		pronunciationMap.forEach((title, pronunciation) -> {
 			Word word = getWord(saveWords, title);
 			if (word == null)
@@ -89,14 +91,15 @@ public class ImporterServiceImpl implements ImporterService {
 			saveWords.put(title, word);
 		});
 
-		student.getPronunciation().getHomeworks().add(getHomework(saveWords));
+		student.getPronunciation().getHomeworks().add(getHomework(saveWords, importData.getFileHash()));
 		studentRepository.save(student);
 		wordRepository.save(saveWords.values());
 	}
 
-	private Homework getHomework(Map<String, Word> saveWords) {
+	private Homework getHomework(Map<String, Word> saveWords, String fileHash) {
 		Homework homework = new Homework();
 		homework.setDate(new Date());
+		homework.setFileHash(fileHash);
 		homework.setWords(new ArrayList<>(saveWords.values()));
 		return homework;
 	}
@@ -105,6 +108,15 @@ public class ImporterServiceImpl implements ImporterService {
 		Map<String, Word> saveWords = new HashMap<>();
 
 		ImportData importData = homeworkImporter.doImport(student.getVocabulary().getImportParams());
+
+		boolean homeworkImported = student.getVocabulary().getHomeworks()
+				.stream()
+				.anyMatch(homework -> importData.getFileHash().equalsIgnoreCase(homework.getFileHash()));
+
+		if (homeworkImported) {
+			return;
+		}
+
 		Map<String, String> vocabularyMap = importData.getResult();
 
 		vocabularyMap.forEach((title, translation) -> {
@@ -116,7 +128,7 @@ public class ImporterServiceImpl implements ImporterService {
 			saveWords.put(title, word);
 		});
 
-		student.getVocabulary().getHomeworks().add(getHomework(saveWords));
+		student.getVocabulary().getHomeworks().add(getHomework(saveWords, importData.getFileHash()));
 
 		wordRepository.save(saveWords.values());
 	}
