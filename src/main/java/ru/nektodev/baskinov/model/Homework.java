@@ -7,15 +7,8 @@ import java.util.List;
 
 public class Homework {
 	private Date date;
+	private String fileHash;
 	private List<Word> words;
-
-	@Override
-	public String toString() {
-		return "Homework{" +
-				"date=" + date +
-				", words=" + words +
-				'}';
-	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -23,12 +16,23 @@ public class Homework {
 		if (o == null || getClass() != o.getClass()) return false;
 		Homework homework = (Homework) o;
 		return Objects.equal(date, homework.date) &&
+				Objects.equal(fileHash, homework.fileHash) &&
 				Objects.equal(words, homework.words);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(date, words);
+		return Objects.hashCode(date, fileHash, words);
+	}
+
+	@Override
+	public String
+	toString() {
+		return "Homework{" +
+				"date=" + date +
+				", fileHash='" + fileHash + '\'' +
+				", words=" + words +
+				'}';
 	}
 
 	public Date getDate() {
@@ -45,5 +49,13 @@ public class Homework {
 
 	public void setWords(List<Word> words) {
 		this.words = words;
+	}
+
+	public String getFileHash() {
+		return fileHash;
+	}
+
+	public void setFileHash(String fileHash) {
+		this.fileHash = fileHash;
 	}
 }
