@@ -1,6 +1,5 @@
 package ru.nektodev.baskinov.importer.impl;
 
-
 import com.yandex.disk.rest.Credentials;
 import com.yandex.disk.rest.RestClient;
 import com.yandex.disk.rest.exceptions.ServerException;
@@ -8,6 +7,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.nektodev.baskinov.importer.HomeworkImporter;
 import ru.nektodev.baskinov.model.ImportParams;
@@ -22,17 +22,23 @@ import java.util.Map;
 @Service
 public class HomeworkImporterImpl implements HomeworkImporter {
 
-	public static final Credentials CREDENTIALS = new Credentials("", "");
-	private static File TEMP_DIR = new File("/Users/nektodev/Downloads/temp");
+	private static final Credentials CREDENTIALS = new Credentials("", "");
+
+	@Value("${importer.temp.directory}")
+	private String tempDirPath;
+
+	private File tempDir;
 	private RestClient client;
 
 	@PostConstruct
 	public void init() {
-		if (!TEMP_DIR.exists()) {
-			TEMP_DIR.mkdirs();
+		tempDir = new File(tempDirPath);
+
+		if (!tempDir.exists()) {
+			tempDir.mkdirs();
 		}
 
-		if (!TEMP_DIR.isDirectory() || !TEMP_DIR.canWrite()) {
+		if (!tempDir.isDirectory() || !tempDir.canWrite()) {
 			//throw exception
 		}
 
@@ -62,7 +68,7 @@ public class HomeworkImporterImpl implements HomeworkImporter {
 	}
 
 	private File downloadFile(ImportParams params) throws IOException, ServerException {
-		File saveTo = new File(TEMP_DIR, "temp_"+ new Date().getTime());
+		File saveTo = new File(tempDir, "temp_"+ new Date().getTime());
 
 		client.downloadPublicResource(params.getPublicKey(),
 				params.getPath(),

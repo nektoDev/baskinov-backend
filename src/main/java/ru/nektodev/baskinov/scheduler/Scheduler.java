@@ -11,7 +11,7 @@ public class Scheduler {
 	@Autowired
 	private ImporterService importerService;
 
-	@Scheduled(cron="0 0 */1 * * *")
+	@Scheduled(cron="${scheduler.import.cron}")
 	public void importAllStudents() {
 		importerService.importAll();
 	}
