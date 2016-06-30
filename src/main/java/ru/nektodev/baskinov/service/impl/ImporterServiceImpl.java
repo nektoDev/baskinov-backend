@@ -10,6 +10,7 @@ import ru.nektodev.baskinov.repository.WordRepository;
 import ru.nektodev.baskinov.service.ImporterService;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -31,7 +32,7 @@ public class ImporterServiceImpl implements ImporterService {
 		for (Student student : studentRepository.findAll()) {
 			try {
 				importHomework(student);
-			} catch (IOException | ServerException e) {
+			} catch (IOException | ServerException | NoSuchAlgorithmException e) {
 				e.printStackTrace();
 				return "ERROR";
 			}
@@ -46,7 +47,7 @@ public class ImporterServiceImpl implements ImporterService {
 		Student student = studentRepository.findOne(studentId);
 		try {
 			importHomework(student);
-		} catch (IOException | ServerException e) {
+		} catch (IOException | ServerException | NoSuchAlgorithmException e) {
 			e.printStackTrace();
 			return "ERROR";
 		}
@@ -54,7 +55,7 @@ public class ImporterServiceImpl implements ImporterService {
 		return "OK";
 	}
 
-	private void importHomework(Student student) throws IOException, ServerException {
+	private void importHomework(Student student) throws IOException, ServerException, NoSuchAlgorithmException {
 		if (student.getPronunciation().getHomeworks() == null) {
 			student.getPronunciation().setHomeworks(new ArrayList<>());
 			studentRepository.save(student);
@@ -68,7 +69,7 @@ public class ImporterServiceImpl implements ImporterService {
 		importPronunciationHomework(student);
 	}
 
-	private void importPronunciationHomework(Student student) throws IOException, ServerException {
+	private void importPronunciationHomework(Student student) throws IOException, ServerException, NoSuchAlgorithmException {
 		Map<String, Word> saveWords = new HashMap<>();
 
 		ImportData importData = homeworkImporter.doImport(student.getPronunciation().getImportParams());
@@ -104,7 +105,7 @@ public class ImporterServiceImpl implements ImporterService {
 		return homework;
 	}
 
-	private void importVocabularyHomework(Student student) throws IOException, ServerException {
+	private void importVocabularyHomework(Student student) throws IOException, ServerException, NoSuchAlgorithmException {
 		Map<String, Word> saveWords = new HashMap<>();
 
 		ImportData importData = homeworkImporter.doImport(student.getVocabulary().getImportParams());

@@ -15,7 +15,10 @@ import ru.nektodev.baskinov.model.ImportParams;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,13 +50,32 @@ public class HomeworkImporterImpl implements HomeworkImporter {
 	}
 
 	@Override
-	public ImportData doImport(ImportParams params) throws IOException, ServerException {
+	public ImportData doImport(ImportParams params) throws IOException, ServerException, NoSuchAlgorithmException {
 		ImportData result = new ImportData();
 
-		File vocabularyFile = downloadFile(params);
-		result.setResult(parseFile(vocabularyFile));
-		result.setFileHash("1111");
+		File file = downloadFile(params);
+		result.setResult(parseFile(file));
+		result.setFileHash(calculateFileHash(file));
 		return result;
+	}
+
+	private String calculateFileHash(File file) throws IOException, NoSuchAlgorithmException {
+
+		MessageDigest md = MessageDigest.getInstance("MD5");
+		FileInputStream fis = new FileInputStream(file);
+		byte[] dataBytes = new byte[1024];
+		int nread;
+		while ((nread = fis.read(dataBytes)) != -1) {
+			md.update(dataBytes, 0, nread);
+		};
+		byte[] mdbytes = md.digest();
+
+		StringBuilder sb = new StringBuilder("");
+		for (byte mdbyte : mdbytes) {
+			sb.append(Integer.toString((mdbyte & 0xff) + 0x100, 16).substring(1));
+		}
+
+		return sb.toString();
 	}
 
 	private Map<String, String> parseFile(File file) throws IOException {
