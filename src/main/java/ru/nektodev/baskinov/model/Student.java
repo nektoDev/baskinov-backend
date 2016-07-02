@@ -12,6 +12,18 @@ public class Student implements Serializable {
 	private String name;
 	private Task vocabulary;
 	private Task pronunciation;
+	private String dialect;
+
+	@Override
+	public String toString() {
+		return "Student{" +
+				"id='" + id + '\'' +
+				", name='" + name + '\'' +
+				", vocabulary=" + vocabulary +
+				", pronunciation=" + pronunciation +
+				", dialect='" + dialect + '\'' +
+				'}';
+	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -21,22 +33,13 @@ public class Student implements Serializable {
 		return Objects.equal(id, student.id) &&
 				Objects.equal(name, student.name) &&
 				Objects.equal(vocabulary, student.vocabulary) &&
-				Objects.equal(pronunciation, student.pronunciation);
+				Objects.equal(pronunciation, student.pronunciation) &&
+				Objects.equal(dialect, student.dialect);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(id, name, vocabulary, pronunciation);
-	}
-
-	@Override
-	public String toString() {
-		return "Student{" +
-				"id='" + id + '\'' +
-				", name='" + name + '\'' +
-				", vocabulary=" + vocabulary +
-				", pronunciation=" + pronunciation +
-				'}';
+		return Objects.hashCode(id, name, vocabulary, pronunciation, dialect);
 	}
 
 	public String getName() {
@@ -69,5 +72,13 @@ public class Student implements Serializable {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getDialect() {
+		return dialect;
+	}
+
+	public void setDialect(String dialect) {
+		this.dialect = dialect;
 	}
 }

@@ -4,6 +4,7 @@ import com.google.common.base.Objects;
 import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
+import java.util.Map;
 import java.util.Set;
 
 import static com.google.common.base.Objects.equal;
@@ -17,7 +18,7 @@ public class Word implements Serializable {
 
 	@Id
 	private String word;
-	private String pronunciation;
+	private Map<String, String> pronunciation;
 	private Set<String> translation;
 	
 	private boolean checked;
@@ -66,11 +67,11 @@ public class Word implements Serializable {
 		this.word = word;
 	}
 
-	public String getPronunciation() {
+	public Map<String, String> getPronunciation() {
 		return pronunciation;
 	}
 
-	public void setPronunciation(String pronunciation) {
+	public void setPronunciation(Map<String, String> pronunciation) {
 		this.pronunciation = pronunciation;
 	}
 

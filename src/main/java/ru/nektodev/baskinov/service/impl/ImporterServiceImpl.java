@@ -26,7 +26,6 @@ public class ImporterServiceImpl implements ImporterService {
 
 	@Override
 	public String importAllStudents() {
-
 		for (Student student : studentRepository.findAll()) {
 			try {
 				importHomework(student);
@@ -86,7 +85,10 @@ public class ImporterServiceImpl implements ImporterService {
 			if (word == null)
 				word = new Word(title);
 
-			word.setPronunciation(pronunciation);
+			if (word.getPronunciation() == null)
+				word.setPronunciation(new HashMap<>());
+
+			word.getPronunciation().put(student.getDialect(), pronunciation);
 			saveWords.put(title, word);
 		});
 
