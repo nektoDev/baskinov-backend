@@ -11,10 +11,7 @@ import ru.nektodev.baskinov.service.ImporterService;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ImporterServiceImpl implements ImporterService {
@@ -29,6 +26,10 @@ public class ImporterServiceImpl implements ImporterService {
 
 	@Override
 	public String importAllStudents() {
+
+		studentRepository.save(generateStudents("aydar", "Aydar"));
+		studentRepository.save(generateStudents("yuliya", "Yuliya"));
+
 		for (Student student : studentRepository.findAll()) {
 			try {
 				importHomework(student);
@@ -122,10 +123,14 @@ public class ImporterServiceImpl implements ImporterService {
 
 		vocabularyMap.forEach((title, translation) -> {
 			Word word = getWord(saveWords, title);
+
 			if (word == null)
 				word = new Word(title);
 
-			word.setTranslation(translation);
+			if (word.getTranslation() == null)
+				word.setTranslation(new HashSet<>());
+
+			Collections.addAll(word.getTranslation(), translation.split(","));
 			saveWords.put(title, word);
 		});
 
@@ -142,5 +147,34 @@ public class ImporterServiceImpl implements ImporterService {
 			word = wordRepository.findOne(title);
 		}
 		return word;
+	}
+
+
+
+
+	private Student generateStudents(String id, String name) {
+		Student student = new Student();
+		student.setId(id);
+		student.setName(name);
+
+		Task vocabulary= new Task();
+		vocabulary.setId("1");
+		ImportParams importData = new ImportParams();
+
+		importData.setPath("/homework/vocabulary/en-ru.html");
+		importData.setPublicKey("DhLa7f6nRVrD8AZj9EGmFkyE8goTvQr0vPDb6WsdgtQ%3D");
+		vocabulary.setImportParams(importData);
+		student.setVocabulary(vocabulary);
+
+		Task pronunciation = new Task();
+
+		pronunciation.setId("1");
+		ImportParams importData2 = new ImportParams();
+
+		importData2.setPath("/homework/pronunciation/" + name + "/practice-and-check.html");
+		importData2.setPublicKey("DhLa7f6nRVrD8AZj9EGmFkyE8goTvQr0vPDb6WsdgtQ%3D");
+		pronunciation.setImportParams(importData2);
+		student.setPronunciation(pronunciation);
+		return student;
 	}
 }
