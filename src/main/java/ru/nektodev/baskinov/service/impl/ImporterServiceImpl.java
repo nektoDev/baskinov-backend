@@ -36,7 +36,7 @@ public class ImporterServiceImpl implements ImporterService {
 			}
 		}
 
-		return studentRepository.findAll().toString();
+		return "OK";
 	}
 
 	@Override
