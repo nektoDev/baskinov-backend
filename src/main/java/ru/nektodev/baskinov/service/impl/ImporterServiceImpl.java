@@ -27,9 +27,6 @@ public class ImporterServiceImpl implements ImporterService {
 	@Override
 	public String importAllStudents() {
 
-		studentRepository.save(generateStudents("aydar", "Aydar"));
-		studentRepository.save(generateStudents("yuliya", "Yuliya"));
-
 		for (Student student : studentRepository.findAll()) {
 			try {
 				importHomework(student);
@@ -147,34 +144,5 @@ public class ImporterServiceImpl implements ImporterService {
 			word = wordRepository.findOne(title);
 		}
 		return word;
-	}
-
-
-
-
-	private Student generateStudents(String id, String name) {
-		Student student = new Student();
-		student.setId(id);
-		student.setName(name);
-
-		Task vocabulary= new Task();
-		vocabulary.setId("1");
-		ImportParams importData = new ImportParams();
-
-		importData.setPath("/homework/vocabulary/en-ru.html");
-		importData.setPublicKey("DhLa7f6nRVrD8AZj9EGmFkyE8goTvQr0vPDb6WsdgtQ%3D");
-		vocabulary.setImportParams(importData);
-		student.setVocabulary(vocabulary);
-
-		Task pronunciation = new Task();
-
-		pronunciation.setId("1");
-		ImportParams importData2 = new ImportParams();
-
-		importData2.setPath("/homework/pronunciation/" + name + "/practice-and-check.html");
-		importData2.setPublicKey("DhLa7f6nRVrD8AZj9EGmFkyE8goTvQr0vPDb6WsdgtQ%3D");
-		pronunciation.setImportParams(importData2);
-		student.setPronunciation(pronunciation);
-		return student;
 	}
 }
