@@ -13,6 +13,6 @@ public class Scheduler {
 
 	@Scheduled(cron="${scheduler.import.cron}")
 	public void importAllStudents() {
-		importerService.importAllStudents();
+		importerService.importAllStudentsHomework();
 	}
 }

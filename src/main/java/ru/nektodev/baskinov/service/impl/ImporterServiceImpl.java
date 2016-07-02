@@ -25,7 +25,7 @@ public class ImporterServiceImpl implements ImporterService {
 	private WordRepository wordRepository;
 
 	@Override
-	public String importAllStudents() {
+	public String importAllStudentsHomework() {
 
 		for (Student student : studentRepository.findAll()) {
 			try {
