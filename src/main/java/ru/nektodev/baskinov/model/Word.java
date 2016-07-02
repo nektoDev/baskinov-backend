@@ -7,8 +7,6 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
-import static com.google.common.base.Objects.equal;
-
 /**
  * Data model class
  *
@@ -20,9 +18,6 @@ public class Word implements Serializable {
 	private String word;
 	private Map<String, String> pronunciation;
 	private Set<String> translation;
-	
-	private boolean checked;
-	private boolean isAnswerShow;
 
 	public Word() {
 	}
@@ -32,31 +27,27 @@ public class Word implements Serializable {
 	}
 
 	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Word word1 = (Word) o;
+		return Objects.equal(word, word1.word) &&
+				Objects.equal(pronunciation, word1.pronunciation) &&
+				Objects.equal(translation, word1.translation);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(word, pronunciation, translation);
+	}
+
+	@Override
 	public String toString() {
 		return "Word{" +
 				"word='" + word + '\'' +
 				", pronunciation='" + pronunciation + '\'' +
 				", translation='" + translation + '\'' +
-				", checked=" + checked +
-				", isAnswerShow=" + isAnswerShow +
 				'}';
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Word word1 = (Word) o;
-		return checked == word1.checked &&
-				isAnswerShow == word1.isAnswerShow &&
-				equal(word, word1.word) &&
-				equal(pronunciation, word1.pronunciation) &&
-				equal(translation, word1.translation);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(word, pronunciation, translation, checked, isAnswerShow);
 	}
 
 	public String getWord() {
@@ -81,21 +72,5 @@ public class Word implements Serializable {
 
 	public void setTranslation(Set<String> translation) {
 		this.translation = translation;
-	}
-
-	public boolean isChecked() {
-		return checked;
-	}
-
-	public void setChecked(boolean checked) {
-		this.checked = checked;
-	}
-
-	public boolean isAnswerShow() {
-		return isAnswerShow;
-	}
-
-	public void setAnswerShow(boolean answerShow) {
-		isAnswerShow = answerShow;
 	}
 }

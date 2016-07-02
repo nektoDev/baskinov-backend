@@ -4,6 +4,7 @@ import com.google.common.base.Objects;
 import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
+import java.util.Set;
 
 public class Student implements Serializable {
 
@@ -13,6 +14,7 @@ public class Student implements Serializable {
 	private Task vocabulary;
 	private Task pronunciation;
 	private String dialect;
+	private Set<String> words;
 
 	@Override
 	public String toString() {
@@ -22,6 +24,7 @@ public class Student implements Serializable {
 				", vocabulary=" + vocabulary +
 				", pronunciation=" + pronunciation +
 				", dialect='" + dialect + '\'' +
+				", words=" + words +
 				'}';
 	}
 
@@ -34,12 +37,13 @@ public class Student implements Serializable {
 				Objects.equal(name, student.name) &&
 				Objects.equal(vocabulary, student.vocabulary) &&
 				Objects.equal(pronunciation, student.pronunciation) &&
-				Objects.equal(dialect, student.dialect);
+				Objects.equal(dialect, student.dialect) &&
+				Objects.equal(words, student.words);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(id, name, vocabulary, pronunciation, dialect);
+		return Objects.hashCode(id, name, vocabulary, pronunciation, dialect, words);
 	}
 
 	public String getName() {
@@ -80,5 +84,13 @@ public class Student implements Serializable {
 
 	public void setDialect(String dialect) {
 		this.dialect = dialect;
+	}
+
+	public Set<String> getWords() {
+		return words;
+	}
+
+	public void setWords(Set<String> words) {
+		this.words = words;
 	}
 }

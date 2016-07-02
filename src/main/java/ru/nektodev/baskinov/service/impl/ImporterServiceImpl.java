@@ -26,6 +26,7 @@ public class ImporterServiceImpl implements ImporterService {
 
 	@Override
 	public String importAllStudents() {
+
 		for (Student student : studentRepository.findAll()) {
 			try {
 				importHomework(student);
@@ -61,6 +62,10 @@ public class ImporterServiceImpl implements ImporterService {
 			student.getVocabulary().setHomeworks(new ArrayList<>());
 			studentRepository.save(student);
 		}
+		if (student.getWords() == null) {
+			student.setWords(new HashSet<>());
+			studentRepository.save(student);
+		}
 
 		importVocabularyHomework(student);
 		importPronunciationHomework(student);
@@ -93,6 +98,7 @@ public class ImporterServiceImpl implements ImporterService {
 		});
 
 		student.getPronunciation().getHomeworks().add(getHomework(saveWords, importData.getFileHash()));
+		student.getWords().addAll(saveWords.keySet());
 		studentRepository.save(student);
 		wordRepository.save(saveWords.values());
 	}
@@ -134,7 +140,8 @@ public class ImporterServiceImpl implements ImporterService {
 		});
 
 		student.getVocabulary().getHomeworks().add(getHomework(saveWords, importData.getFileHash()));
-
+		student.getWords().addAll(saveWords.keySet());
+		studentRepository.save(student);
 		wordRepository.save(saveWords.values());
 	}
 
