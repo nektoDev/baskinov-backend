@@ -20,7 +20,7 @@ public class StudentServiceImpl implements StudentService {
 		if (Strings.isNullOrEmpty(studentId)) {
 			return studentRepository.findAll();
 		} else {
-			return Collections.singletonList(studentRepository.findOne("aydar"));
+			return Collections.singletonList(studentRepository.findOne(studentId));
 		}
 	}
 }
