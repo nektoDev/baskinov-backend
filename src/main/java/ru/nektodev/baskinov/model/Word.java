@@ -21,9 +21,6 @@ public class Word implements Serializable {
 	private Map<String, String> pronunciation;
 	private Set<String> translation;
 
-	private boolean checked;
-	private boolean isAnswerShow;
-
 	public Word() {
 	}
 
@@ -37,8 +34,6 @@ public class Word implements Serializable {
 				"id='" + id + '\'' +
 				", pronunciation='" + pronunciation + '\'' +
 				", translation='" + translation + '\'' +
-				", checked=" + checked +
-				", isAnswerShow=" + isAnswerShow +
 				'}';
 	}
 
@@ -47,16 +42,14 @@ public class Word implements Serializable {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		Word word1 = (Word) o;
-		return checked == word1.checked &&
-				isAnswerShow == word1.isAnswerShow &&
-				equal(id, word1.id) &&
+		return  equal(id, word1.id) &&
 				equal(pronunciation, word1.pronunciation) &&
 				equal(translation, word1.translation);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(id, pronunciation, translation, checked, isAnswerShow);
+		return Objects.hashCode(id, pronunciation, translation);
 	}
 
 	public String getId() {
@@ -81,21 +74,5 @@ public class Word implements Serializable {
 
 	public void setTranslation(Set<String> translation) {
 		this.translation = translation;
-	}
-
-	public boolean isChecked() {
-		return checked;
-	}
-
-	public void setChecked(boolean checked) {
-		this.checked = checked;
-	}
-
-	public boolean isAnswerShow() {
-		return isAnswerShow;
-	}
-
-	public void setAnswerShow(boolean answerShow) {
-		isAnswerShow = answerShow;
 	}
 }
