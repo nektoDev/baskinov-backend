@@ -98,7 +98,7 @@ public class ImporterServiceImpl implements ImporterService {
 		});
 
 		student.getPronunciation().getHomeworks().add(getHomework(saveWords, importData.getFileHash()));
-		student.getWords().addAll(saveWords.keySet());
+		student.getWords().addAll(pronunciationMap.keySet());
 		studentRepository.save(student);
 		wordRepository.save(saveWords.values());
 	}
@@ -140,7 +140,7 @@ public class ImporterServiceImpl implements ImporterService {
 		});
 
 		student.getVocabulary().getHomeworks().add(getHomework(saveWords, importData.getFileHash()));
-		student.getWords().addAll(saveWords.keySet());
+		student.getWords().addAll(vocabularyMap.keySet());
 		studentRepository.save(student);
 		wordRepository.save(saveWords.values());
 	}
