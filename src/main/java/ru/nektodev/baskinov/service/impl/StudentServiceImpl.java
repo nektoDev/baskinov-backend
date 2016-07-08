@@ -67,7 +67,7 @@ public class StudentServiceImpl implements StudentService {
 		vocabulary.setId("1");
 		ImportParams importData = new ImportParams();
 
-		importData.setPath("/homework/vocabulary/en-ru.html");
+		importData.setPath("/homework/vocabulary/ru-en.html");
 		importData.setPublicKey("DhLa7f6nRVrD8AZj9EGmFkyE8goTvQr0vPDb6WsdgtQ%3D");
 		vocabulary.setImportParams(importData);
 		student.setVocabulary(vocabulary);
