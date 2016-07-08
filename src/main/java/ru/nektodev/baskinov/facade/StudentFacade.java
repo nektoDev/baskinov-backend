@@ -36,6 +36,7 @@ public class StudentFacade {
 
 	@RequestMapping(value = "/clear", method = RequestMethod.GET)
 	public String clear() {
+		studentService.clear();
 		return "OK";
 	}
 
