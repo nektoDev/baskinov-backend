@@ -29,6 +29,16 @@ public class StudentFacade {
 		return student;
 	}
 
+	@RequestMapping(value = "/generate", method = RequestMethod.GET)
+	public List<Student> generate() {
+		return studentService.generate();
+	}
+
+	@RequestMapping(value = "/clear", method = RequestMethod.GET)
+	public String clear() {
+		return "OK";
+	}
+
 	private void reduceStudent(Student student) {
 		if (student == null) return;
 		student.setPronunciation(null);

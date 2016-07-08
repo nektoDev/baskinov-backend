@@ -9,4 +9,8 @@ import java.util.List;
 public interface StudentService {
 
 	List<Student> getStudent(String studentId);
+
+	List<Student> generate();
+
+	void clear();
 }
