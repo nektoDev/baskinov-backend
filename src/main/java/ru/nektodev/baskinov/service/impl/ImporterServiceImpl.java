@@ -126,7 +126,7 @@ public class ImporterServiceImpl implements ImporterService {
 
 		Map<String, String> vocabularyMap = importData.getResult();
 
-		vocabularyMap.forEach((title, translation) -> {
+		vocabularyMap.forEach((translation, title) -> {
 			Word word = getWord(saveWords, title);
 
 			if (word == null)
@@ -140,7 +140,7 @@ public class ImporterServiceImpl implements ImporterService {
 		});
 
 		student.getVocabulary().getHomeworks().add(getHomework(saveWords, importData.getFileHash()));
-		student.getWords().addAll(vocabularyMap.keySet());
+		student.getWords().addAll(vocabularyMap.values());
 		studentRepository.save(student);
 		wordRepository.save(saveWords.values());
 	}
