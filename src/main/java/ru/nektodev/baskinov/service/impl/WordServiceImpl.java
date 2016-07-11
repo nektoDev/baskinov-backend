@@ -65,8 +65,8 @@ public class WordServiceImpl implements WordService {
 	private Optional<Homework> getHomeworks(Date date, List<Homework> homeworks) {
 		Optional<Homework> homework;
 		if (date == null) {
-			homework = homeworks.stream().sorted(Comparator.comparing(Homework::getDate,
-					Date::compareTo)).findFirst();
+			homework = homeworks.stream().max(Comparator.comparing(Homework::getDate,
+					Date::compareTo));
 		} else {
 			LocalDate homeworkDate = toLocaldateConverter.convert(date);
 			homework = homeworks
