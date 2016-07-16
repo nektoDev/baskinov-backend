@@ -135,7 +135,7 @@ public class ImporterServiceImpl implements ImporterService {
 			if (word.getTranslation() == null)
 				word.setTranslation(new HashSet<>());
 
-			Collections.addAll(word.getTranslation(), translation.split(","));
+			word.getTranslation().add(translation);
 			saveWords.put(title, word);
 		});
 
