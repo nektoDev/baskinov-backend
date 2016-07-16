@@ -75,7 +75,6 @@ public class ImporterServiceImpl implements ImporterService {
 		Map<String, Word> saveWords = new HashMap<>();
 
 		ImportData importData = homeworkImporter.doImport(student.getPronunciation().getImportParams());
-		Map<String, String> pronunciationMap = importData.getResult();
 
 		boolean homeworkImported = student.getPronunciation().getHomeworks()
 				.stream()
@@ -84,6 +83,9 @@ public class ImporterServiceImpl implements ImporterService {
 		if (homeworkImported) {
 			return;
 		}
+
+		Map<String, String> pronunciationMap = importData.getResult();
+		List<HomeworkWord> homeworkWords = new ArrayList<>();
 
 		pronunciationMap.forEach((title, pronunciation) -> {
 			Word word = getWord(saveWords, title);
@@ -95,20 +97,13 @@ public class ImporterServiceImpl implements ImporterService {
 
 			word.getPronunciation().put(student.getDialect(), pronunciation);
 			saveWords.put(title, word);
+			homeworkWords.add(new HomeworkWord(title, pronunciation, title));
 		});
 
-		student.getPronunciation().getHomeworks().add(getHomework(saveWords, importData.getFileHash()));
+		student.getPronunciation().getHomeworks().add(getHomework(homeworkWords, importData.getFileHash()));
 		student.getWords().addAll(pronunciationMap.keySet());
 		studentRepository.save(student);
 		wordRepository.save(saveWords.values());
-	}
-
-	private Homework getHomework(Map<String, Word> saveWords, String fileHash) {
-		Homework homework = new Homework();
-		homework.setDate(new Date());
-		homework.setFileHash(fileHash);
-		homework.setWords(new ArrayList<>(saveWords.values()));
-		return homework;
 	}
 
 	private void importVocabularyHomework(Student student) throws IOException, ServerException, NoSuchAlgorithmException {
@@ -125,6 +120,7 @@ public class ImporterServiceImpl implements ImporterService {
 		}
 
 		Map<String, String> vocabularyMap = importData.getResult();
+		List<HomeworkWord> homeworkWords = new ArrayList<>();
 
 		vocabularyMap.forEach((translation, title) -> {
 			Word word = getWord(saveWords, title);
@@ -137,13 +133,23 @@ public class ImporterServiceImpl implements ImporterService {
 
 			word.getTranslation().add(translation);
 			saveWords.put(title, word);
+			homeworkWords.add(new HomeworkWord(title, translation, title));
 		});
 
-		student.getVocabulary().getHomeworks().add(getHomework(saveWords, importData.getFileHash()));
+		student.getVocabulary().getHomeworks().add(getHomework(homeworkWords, importData.getFileHash()));
 		student.getWords().addAll(vocabularyMap.values());
 		studentRepository.save(student);
 		wordRepository.save(saveWords.values());
 	}
+
+	private Homework getHomework(List<HomeworkWord> words, String fileHash) {
+		Homework homework = new Homework();
+		homework.setDate(new Date());
+		homework.setFileHash(fileHash);
+		homework.setWords(words);
+		return homework;
+	}
+
 
 	private Word getWord(Map<String, Word> saveWords, String title) {
 		Word word;

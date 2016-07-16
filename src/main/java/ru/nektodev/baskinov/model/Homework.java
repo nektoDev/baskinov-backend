@@ -8,7 +8,7 @@ import java.util.List;
 public class Homework {
 	private Date date;
 	private String fileHash;
-	private List<Word> words;
+	private List<HomeworkWord> words;
 
 	@Override
 	public boolean equals(Object o) {
@@ -43,11 +43,11 @@ public class Homework {
 		this.date = date;
 	}
 
-	public List<Word> getWords() {
+	public List<HomeworkWord> getWords() {
 		return words;
 	}
 
-	public void setWords(List<Word> words) {
+	public void setWords(List<HomeworkWord> words) {
 		this.words = words;
 	}
 
