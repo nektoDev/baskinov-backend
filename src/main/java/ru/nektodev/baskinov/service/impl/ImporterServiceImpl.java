@@ -88,9 +88,7 @@ public class ImporterServiceImpl implements ImporterService {
 		List<HomeworkWord> homeworkWords = new ArrayList<>();
 
 		pronunciationMap.forEach((title, pronunciation) -> {
-			Word word = getWord(saveWords, title);
-			if (word == null)
-				word = new Word(student.getId(), title);
+			Word word = getWord(saveWords, title, student.getId());
 
 			if (word.getPronunciation() == null)
 				word.setPronunciation(new HashMap<>());
@@ -123,12 +121,9 @@ public class ImporterServiceImpl implements ImporterService {
 		List<HomeworkWord> homeworkWords = new ArrayList<>();
 
 		vocabularyMap.forEach((translation, title) -> {
-			Word word = getWord(saveWords, title);
+			Word word = getWord(saveWords, title, student.getId());
 
-			if (word == null)
-				word = new Word(student.getId(), title);
 
-			if (word.getTranslation() == null)
 				word.setTranslation(new HashSet<>());
 
 			word.getTranslation().add(translation);
@@ -151,13 +146,22 @@ public class ImporterServiceImpl implements ImporterService {
 	}
 
 
-	private Word getWord(Map<String, Word> saveWords, String title) {
+	private Word getWord(Map<String, Word> saveWords, String title, String student) {
 		Word word;
 		if (saveWords.containsKey(title)) {
 			word = saveWords.get(title);
 		} else {
 			word = wordRepository.findOne(title);
 		}
+
+		if (word == null) {
+			word = new Word(student, title);
+		} else {
+			Integer countUses = word.getCountUses().getOrDefault(student, 0);
+			word.getCountUses().put(student, ++countUses);
+			word.getLastUsed().put(student, new Date());
+		}
+
 		return word;
 	}
 }
