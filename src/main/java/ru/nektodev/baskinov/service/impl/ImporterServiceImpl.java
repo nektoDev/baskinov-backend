@@ -90,7 +90,7 @@ public class ImporterServiceImpl implements ImporterService {
 		pronunciationMap.forEach((title, pronunciation) -> {
 			Word word = getWord(saveWords, title);
 			if (word == null)
-				word = new Word(title);
+				word = new Word(student.getId(), title);
 
 			if (word.getPronunciation() == null)
 				word.setPronunciation(new HashMap<>());
@@ -126,7 +126,7 @@ public class ImporterServiceImpl implements ImporterService {
 			Word word = getWord(saveWords, title);
 
 			if (word == null)
-				word = new Word(title);
+				word = new Word(student.getId(), title);
 
 			if (word.getTranslation() == null)
 				word.setTranslation(new HashSet<>());

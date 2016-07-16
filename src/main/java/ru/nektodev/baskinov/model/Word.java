@@ -4,10 +4,10 @@ import com.google.common.base.Objects;
 import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import static com.google.common.base.Objects.equal;
 
 /**
  * Data model class
@@ -20,11 +20,25 @@ public class Word implements Serializable {
 	private String id;
 	private Map<String, String> pronunciation;
 	private Set<String> translation;
+	private Map<String, Integer> countUses;
+	private Map<String, Date> firstAppeared;
+	private Map<String, Date> lastUsed;
 
-	public Word() {
+	public Word() {}
+
+	public Word(String student) {
+		this.firstAppeared = new HashMap<>();
+		this.firstAppeared.put(student, new Date());
+
+		this.lastUsed = new HashMap<>();
+		this.lastUsed.put(student, new Date());
+
+		this.countUses = new HashMap<>();
+		this.countUses.put(student, 1);
 	}
 
-	public Word(String id) {
+	public Word(String student, String id) {
+		this(student);
 		this.id = id;
 	}
 
@@ -32,8 +46,11 @@ public class Word implements Serializable {
 	public String toString() {
 		return "Word{" +
 				"id='" + id + '\'' +
-				", pronunciation='" + pronunciation + '\'' +
-				", translation='" + translation + '\'' +
+				", pronunciation=" + pronunciation +
+				", translation=" + translation +
+				", countUses=" + countUses +
+				", firstAppeared=" + firstAppeared +
+				", lastUsed=" + lastUsed +
 				'}';
 	}
 
@@ -41,15 +58,18 @@ public class Word implements Serializable {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		Word word1 = (Word) o;
-		return  equal(id, word1.id) &&
-				equal(pronunciation, word1.pronunciation) &&
-				equal(translation, word1.translation);
+		Word word = (Word) o;
+		return Objects.equal(id, word.id) &&
+				Objects.equal(pronunciation, word.pronunciation) &&
+				Objects.equal(translation, word.translation) &&
+				Objects.equal(countUses, word.countUses) &&
+				Objects.equal(firstAppeared, word.firstAppeared) &&
+				Objects.equal(lastUsed, word.lastUsed);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(id, pronunciation, translation);
+		return Objects.hashCode(id, pronunciation, translation, countUses, firstAppeared, lastUsed);
 	}
 
 	public String getId() {
@@ -74,5 +94,29 @@ public class Word implements Serializable {
 
 	public void setTranslation(Set<String> translation) {
 		this.translation = translation;
+	}
+
+	public Map<String, Integer> getCountUses() {
+		return countUses;
+	}
+
+	public void setCountUses(Map<String, Integer> countUses) {
+		this.countUses = countUses;
+	}
+
+	public Map<String, Date> getFirstAppeared() {
+		return firstAppeared;
+	}
+
+	public void setFirstAppeared(Map<String, Date> firstAppeared) {
+		this.firstAppeared = firstAppeared;
+	}
+
+	public Map<String, Date> getLastUsed() {
+		return lastUsed;
+	}
+
+	public void setLastUsed(Map<String, Date> lastUsed) {
+		this.lastUsed = lastUsed;
 	}
 }
