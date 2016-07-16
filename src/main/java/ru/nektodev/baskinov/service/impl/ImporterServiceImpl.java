@@ -123,7 +123,7 @@ public class ImporterServiceImpl implements ImporterService {
 		vocabularyMap.forEach((translation, title) -> {
 			Word word = getWord(saveWords, title, student.getId());
 
-
+			if (word.getTranslation() == null)
 				word.setTranslation(new HashSet<>());
 
 			word.getTranslation().add(translation);
@@ -159,6 +159,7 @@ public class ImporterServiceImpl implements ImporterService {
 		} else {
 			Integer countUses = word.getCountUses().getOrDefault(student, 0);
 			word.getCountUses().put(student, ++countUses);
+			word.getFirstAppeared().putIfAbsent(student, new Date());
 			word.getLastUsed().put(student, new Date());
 		}
 
