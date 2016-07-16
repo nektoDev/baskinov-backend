@@ -73,6 +73,11 @@ public class WordServiceImpl implements WordService {
 					.stream()
 					.filter((h) -> toLocaldateConverter.convert(h.getDate()).equals(homeworkDate)).findAny();
 		}
+
+		if (homework.isPresent()) {
+			homework.get().getWords().stream().forEach(w -> w.setWord(wordRepository.findOne(w.getWordId())));
+		}
+
 		return homework;
 	}
 }
