@@ -26,17 +26,17 @@ public class ImporterServiceImpl implements ImporterService {
 
 	@Override
 	public String importAllStudentsHomework() {
-
+		boolean errors = false;
 		for (Student student : studentRepository.findAll()) {
 			try {
 				importHomework(student);
 			} catch (IOException | ServerException | NoSuchAlgorithmException e) {
+				errors = true;
 				e.printStackTrace();
-				return "ERROR";
 			}
 		}
 
-		return "OK";
+		return errors ? "ERROR" : "OK";
 	}
 
 	@Override
