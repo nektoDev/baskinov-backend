@@ -14,5 +14,6 @@ public class Scheduler {
 	@Scheduled(cron="${scheduler.import.cron}")
 	public void importAllStudents() {
 		importerService.importAllStudentsHomework();
+		importerService.importAllStudentProgress();
 	}
 }
