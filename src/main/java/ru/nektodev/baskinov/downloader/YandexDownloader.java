@@ -42,7 +42,7 @@ public class YandexDownloader {
 	}
 
 	public File downloadFile(ImportParams params) throws IOException, ServerException {
-		File saveTo = new File(tempDir, "temp_"+ new Date().getTime());
+		File saveTo = new File(tempDir, "temp_"+ new Date().getTime()+params.getPath().substring(params.getPath().lastIndexOf('.')));
 
 		client.downloadPublicResource(params.getPublicKey(),
 				params.getPath(),

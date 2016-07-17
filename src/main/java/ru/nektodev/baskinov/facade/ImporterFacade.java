@@ -27,9 +27,14 @@ public class ImporterFacade {
 				importer.importStudentHomework(studentId);
 	}
 
-	@RequestMapping(value = "/progress/start/{studentId}", method = RequestMethod.GET)
-	public String getVocabulary(@PathVariable String studentId){
-		return importer.importStudentProgress(studentId);
+
+	@RequestMapping(value = "/progress/start", method = RequestMethod.GET)
+	public String importAllStudentProgress(){
+		return importer.importAllStudentProgress();
 	}
 
+	@RequestMapping(value = "/progress/start/{studentId}", method = RequestMethod.GET)
+	public String importStudentProgress(@PathVariable String studentId){
+		return importer.importStudentProgress(studentId);
+	}
 }

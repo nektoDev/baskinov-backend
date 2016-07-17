@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.nektodev.baskinov.model.ImportParamsProgress;
 import ru.nektodev.baskinov.model.Progress;
 import ru.nektodev.baskinov.model.ProgressDataWrapper;
+import ru.nektodev.baskinov.model.ProgressType;
 import ru.nektodev.baskinov.repository.ProgressRepository;
 import ru.nektodev.baskinov.service.ProgressService;
 
@@ -40,19 +41,37 @@ public class ProgressServiceImpl implements ProgressService {
 		importParams.setPath("/progress/progress.pdf");
 		importParams.setPublicKey("jDY08AP3zoSUx80EWqOBhduCV9KPdOMM41xsUOmKI7o%3D");
 		ProgressDataWrapper[] progressDataWrappers = {null,
-				new ProgressDataWrapper("Dasha Pronunciation", "dasha"),
-				new ProgressDataWrapper("Slava Pronunciation", "slava"),
-				new ProgressDataWrapper("Dasha Vocabulary", "dasha"),
-				new ProgressDataWrapper("Slava Vocabulary", "slava"),
-				new ProgressDataWrapper("Dasha Test", "dasha"),
-				new ProgressDataWrapper("Slava Test", "slava"),
+				new ProgressDataWrapper("Pronunciation", "dasha"),
+				new ProgressDataWrapper("Pronunciation", "slava"),
+				new ProgressDataWrapper("Vocabulary", "dasha"),
+				new ProgressDataWrapper("Vocabulary", "slava"),
+				new ProgressDataWrapper("Test", "dasha"),
+				new ProgressDataWrapper("Test", "slava"),
 		};
 		importParams.setProgressDataWrappers(progressDataWrappers);
-
+		progress.setType(ProgressType.PDF);
 		progress.setImportParams(importParams);
 
 		result.add(progress);
 
+		Progress progress2 = new Progress();
+		progress2.setName("Aydar_Yuliya");
+		ImportParamsProgress importParams2 = new ImportParamsProgress();
+		importParams2.setPath("/progress/progress.ods");
+		importParams2.setPublicKey("DhLa7f6nRVrD8AZj9EGmFkyE8goTvQr0vPDb6WsdgtQ%3D");
+		ProgressDataWrapper[] progressDataWrappers2 = {null,
+				new ProgressDataWrapper("Pronunciation", "yuliya"),
+				new ProgressDataWrapper("Pronunciation", "aydar"),
+				new ProgressDataWrapper("Vocabulary", "yuliya"),
+				new ProgressDataWrapper("Vocabulary", "aydar"),
+				new ProgressDataWrapper("Test", "yuliya"),
+				new ProgressDataWrapper("Test", "aydar"),
+		};
+		importParams2.setProgressDataWrappers(progressDataWrappers2);
+		progress2.setType(ProgressType.ODS);
+		progress2.setImportParams(importParams2);
+
+		result.add(progress2);
 		progressRepository.save(result);
 		return result;
 	}

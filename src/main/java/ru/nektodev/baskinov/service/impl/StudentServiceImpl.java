@@ -91,6 +91,7 @@ public class StudentServiceImpl implements StudentService {
 		importData2.setPublicKey("DhLa7f6nRVrD8AZj9EGmFkyE8goTvQr0vPDb6WsdgtQ%3D");
 		pronunciation.setImportParams(importData2);
 		student.setPronunciation(pronunciation);
+		student.setProgressName("Aydar_Yuliya");
 		return student;
 	}
 }

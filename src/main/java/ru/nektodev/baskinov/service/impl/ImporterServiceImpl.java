@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.nektodev.baskinov.downloader.YandexDownloader;
 import ru.nektodev.baskinov.model.*;
 import ru.nektodev.baskinov.parser.HomeworkParser;
-import ru.nektodev.baskinov.parser.ProgressParser;
+import ru.nektodev.baskinov.parser.ProgressParserFactory;
 import ru.nektodev.baskinov.repository.ProgressRepository;
 import ru.nektodev.baskinov.repository.StudentRepository;
 import ru.nektodev.baskinov.repository.WordRepository;
@@ -34,11 +34,11 @@ public class ImporterServiceImpl implements ImporterService {
 	@Autowired
 	private YandexDownloader yandexDownloader;
 
-	private ProgressParser progressParser;
+	private ProgressParserFactory progressParserFactory;
 
 	@PostConstruct
 	public void init() {
-		progressParser = new ProgressParser();
+		progressParserFactory = new ProgressParserFactory();
 	}
 
 	@Override
@@ -113,7 +113,7 @@ public class ImporterServiceImpl implements ImporterService {
 		try {
 			File file = yandexDownloader.downloadFile(progress.getImportParams());
 
-			ProgressDataWrapper[] progressDataWrappers = progressParser.doParse(file, progress.getImportParams().getProgressDataWrappers());
+			ProgressDataWrapper[] progressDataWrappers = progressParserFactory.getParser(progress).doParse(file, progress.getImportParams().getProgressDataWrappers());
 
 			student.setProgress(Arrays.asList(progressDataWrappers)
 					.stream()
@@ -127,6 +127,18 @@ public class ImporterServiceImpl implements ImporterService {
 			return "ERROR";
 		}
 		return "OK";
+	}
+
+	@Override
+	public String importAllStudentProgress() {
+		List<Student> students = studentRepository.findAll();
+		boolean errors = false;
+		for (Student s : students) {
+			String result = importStudentProgress(s.getId());
+			if ("ERROR".equalsIgnoreCase(result)) errors = true;
+		}
+
+		return errors ? "ERROR" : "OK";
 	}
 
 	private void importHomework(Student student) throws IOException, ServerException, NoSuchAlgorithmException {

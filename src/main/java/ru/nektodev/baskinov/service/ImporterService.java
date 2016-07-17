@@ -13,4 +13,5 @@ public interface ImporterService {
 
 	String importVocabularyHomework(String studentId, File file);
 
+	String importAllStudentProgress();
 }

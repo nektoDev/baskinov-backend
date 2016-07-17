@@ -9,12 +9,14 @@ import org.springframework.data.annotation.Id;
 public class Progress {
 	@Id
 	private String name;
+	private ProgressType type;
 	private ImportParamsProgress importParams;
 
 	@Override
 	public String toString() {
 		return "Progress{" +
 				"name='" + name + '\'' +
+				", type=" + type +
 				", importParams=" + importParams +
 				'}';
 	}
@@ -25,12 +27,13 @@ public class Progress {
 		if (o == null || getClass() != o.getClass()) return false;
 		Progress progress = (Progress) o;
 		return Objects.equal(name, progress.name) &&
+				type == progress.type &&
 				Objects.equal(importParams, progress.importParams);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(name, importParams);
+		return Objects.hashCode(name, type, importParams);
 	}
 
 	public ImportParamsProgress getImportParams() {
@@ -47,5 +50,13 @@ public class Progress {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public ProgressType getType() {
+		return type;
+	}
+
+	public void setType(ProgressType type) {
+		this.type = type;
 	}
 }
