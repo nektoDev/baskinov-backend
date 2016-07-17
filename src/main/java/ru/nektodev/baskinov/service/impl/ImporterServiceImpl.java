@@ -3,12 +3,15 @@ package ru.nektodev.baskinov.service.impl;
 import com.yandex.disk.rest.exceptions.ServerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.nektodev.baskinov.homework.importer.HomeworkImporter;
+import ru.nektodev.baskinov.downloader.YandexDownloader;
+import ru.nektodev.baskinov.importer.HomeworkImporter;
 import ru.nektodev.baskinov.model.*;
 import ru.nektodev.baskinov.repository.StudentRepository;
 import ru.nektodev.baskinov.repository.WordRepository;
 import ru.nektodev.baskinov.service.ImporterService;
+import ru.nektodev.baskinov.util.FileUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
@@ -23,6 +26,9 @@ public class ImporterServiceImpl implements ImporterService {
 
 	@Autowired
 	private WordRepository wordRepository;
+
+	@Autowired
+	private YandexDownloader yandexDownloader;
 
 	@Override
 	public String importAllStudentsHomework() {
@@ -67,24 +73,25 @@ public class ImporterServiceImpl implements ImporterService {
 			studentRepository.save(student);
 		}
 
-		importVocabularyHomework(student);
-		importPronunciationHomework(student);
+		File vocabularyFile = yandexDownloader.downloadFile(student.getVocabulary().getImportParams());
+		importVocabularyHomework(student, vocabularyFile);
+
+		File pronunciationFile = yandexDownloader.downloadFile(student.getPronunciation().getImportParams());
+		importPronunciationHomework(student, pronunciationFile);
 	}
 
-	private void importPronunciationHomework(Student student) throws IOException, ServerException, NoSuchAlgorithmException {
-		Map<String, Word> saveWords = new HashMap<>();
+	@Override
+	public void importPronunciationHomework(Student student, File file) throws IOException, ServerException, NoSuchAlgorithmException {
+		String hash = FileUtils.calculateFileHash(file);
 
-		ImportData importData = homeworkImporter.doImport(student.getPronunciation().getImportParams());
-
-		boolean homeworkImported = student.getPronunciation().getHomeworks()
+		if (student.getPronunciation().getHomeworks()
 				.stream()
-				.anyMatch(homework -> importData.getFileHash().equalsIgnoreCase(homework.getFileHash()));
-
-		if (homeworkImported) {
+				.anyMatch(homework -> hash.equalsIgnoreCase(homework.getFileHash()))) {
 			return;
 		}
 
-		Map<String, String> pronunciationMap = importData.getResult();
+		Map<String, Word> saveWords = new HashMap<>();
+		Map<String, String> pronunciationMap = homeworkImporter.doImport(file);
 		List<HomeworkWord> homeworkWords = new ArrayList<>();
 
 		pronunciationMap.forEach((title, pronunciation) -> {
@@ -98,26 +105,24 @@ public class ImporterServiceImpl implements ImporterService {
 			homeworkWords.add(new HomeworkWord(title, pronunciation, title));
 		});
 
-		student.getPronunciation().getHomeworks().add(getHomework(homeworkWords, importData.getFileHash()));
+		student.getPronunciation().getHomeworks().add(getHomework(homeworkWords, hash));
 		student.getWords().addAll(pronunciationMap.keySet());
 		studentRepository.save(student);
 		wordRepository.save(saveWords.values());
 	}
 
-	private void importVocabularyHomework(Student student) throws IOException, ServerException, NoSuchAlgorithmException {
+	@Override
+	public void importVocabularyHomework(Student student, File file) throws IOException, ServerException, NoSuchAlgorithmException {
 		Map<String, Word> saveWords = new HashMap<>();
 
-		ImportData importData = homeworkImporter.doImport(student.getVocabulary().getImportParams());
-
-		boolean homeworkImported = student.getVocabulary().getHomeworks()
+		String hash = FileUtils.calculateFileHash(file);
+		if (student.getVocabulary().getHomeworks()
 				.stream()
-				.anyMatch(homework -> importData.getFileHash().equalsIgnoreCase(homework.getFileHash()));
-
-		if (homeworkImported) {
+				.anyMatch(homework -> hash.equalsIgnoreCase(homework.getFileHash()))) {
 			return;
 		}
 
-		Map<String, String> vocabularyMap = importData.getResult();
+		Map<String, String> vocabularyMap = homeworkImporter.doImport(file);
 		List<HomeworkWord> homeworkWords = new ArrayList<>();
 
 		vocabularyMap.forEach((translation, title) -> {
@@ -131,7 +136,7 @@ public class ImporterServiceImpl implements ImporterService {
 			homeworkWords.add(new HomeworkWord(title, translation, title));
 		});
 
-		student.getVocabulary().getHomeworks().add(getHomework(homeworkWords, importData.getFileHash()));
+		student.getVocabulary().getHomeworks().add(getHomework(homeworkWords, hash));
 		student.getWords().addAll(vocabularyMap.values());
 		studentRepository.save(student);
 		wordRepository.save(saveWords.values());
