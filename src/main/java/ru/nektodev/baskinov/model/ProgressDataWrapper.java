@@ -2,6 +2,7 @@ package ru.nektodev.baskinov.model;
 
 import com.google.common.base.Objects;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,6 +11,14 @@ import java.util.List;
 public class ProgressDataWrapper {
 	private String name;
 	private List<ProgressData> values;
+
+	public ProgressDataWrapper() {
+	}
+
+	public ProgressDataWrapper(String name) {
+		this.name = name;
+		this.values = new ArrayList<>();
+	}
 
 	@Override
 	public String toString() {

@@ -6,16 +6,19 @@ import org.springframework.stereotype.Service;
 import ru.nektodev.baskinov.downloader.YandexDownloader;
 import ru.nektodev.baskinov.model.*;
 import ru.nektodev.baskinov.parser.HomeworkParser;
+import ru.nektodev.baskinov.parser.ProgressParser;
 import ru.nektodev.baskinov.repository.ProgressRepository;
 import ru.nektodev.baskinov.repository.StudentRepository;
 import ru.nektodev.baskinov.repository.WordRepository;
 import ru.nektodev.baskinov.service.ImporterService;
 import ru.nektodev.baskinov.util.FileUtils;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ImporterServiceImpl implements ImporterService {
@@ -30,6 +33,13 @@ public class ImporterServiceImpl implements ImporterService {
 
 	@Autowired
 	private YandexDownloader yandexDownloader;
+
+	private ProgressParser progressParser;
+
+	@PostConstruct
+	public void init() {
+		progressParser = new ProgressParser();
+	}
 
 	@Override
 	public String importAllStudentsHomework() {
@@ -101,7 +111,19 @@ public class ImporterServiceImpl implements ImporterService {
 		Student student = studentRepository.findOne(studentId);
 		Progress progress = progressRepository.findOne(student.getProgressName());
 		try {
-			yandexDownloader.downloadFile(progress.getImportParams());
+			File file = yandexDownloader.downloadFile(progress.getImportParams());
+			ProgressDataWrapper[] progressDataWrappers = {null,
+					new ProgressDataWrapper("Dasha Pronunciation"),
+					new ProgressDataWrapper("Slava Pronunciation"),
+					new ProgressDataWrapper("Dasha Vocabulary"),
+					new ProgressDataWrapper("Slava Vocabulary"),
+					new ProgressDataWrapper("Dasha Test"),
+					new ProgressDataWrapper("Slava Test"),
+			};
+			ProgressDataWrapper[] progressDataWrappers1 = progressParser.doParse(file, progressDataWrappers);
+			progress.setData(Arrays.asList(progressDataWrappers1).stream().filter((v) -> v != null).collect(Collectors.toList()));
+			progressRepository.save(progress);
+			System.out.println(Arrays.toString(progressDataWrappers1));
 		} catch (IOException | ServerException e) {
 			e.printStackTrace();
 			return "ERROR";
