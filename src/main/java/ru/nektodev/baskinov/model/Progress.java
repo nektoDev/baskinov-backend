@@ -1,6 +1,7 @@
 package ru.nektodev.baskinov.model;
 
 import com.google.common.base.Objects;
+import org.springframework.data.annotation.Id;
 
 import java.util.List;
 
@@ -8,16 +9,17 @@ import java.util.List;
  * @author Slava Tsykin ts.slawa@gmail.com
  */
 public class Progress {
+	@Id
+	private String name;
 	private ImportParams importParams;
-	private List<ProgressData> data;
-	private List<ProgressData> testData;
+	private List<ProgressDataWrapper> data;
 
 	@Override
 	public String toString() {
 		return "Progress{" +
-				"importParams=" + importParams +
+				"name='" + name + '\'' +
+				", importParams=" + importParams +
 				", data=" + data +
-				", testData=" + testData +
 				'}';
 	}
 
@@ -26,14 +28,22 @@ public class Progress {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		Progress progress = (Progress) o;
-		return Objects.equal(importParams, progress.importParams) &&
-				Objects.equal(data, progress.data) &&
-				Objects.equal(testData, progress.testData);
+		return Objects.equal(name, progress.name) &&
+				Objects.equal(importParams, progress.importParams) &&
+				Objects.equal(data, progress.data);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(importParams, data, testData);
+		return Objects.hashCode(name, importParams, data);
+	}
+
+	public List<ProgressDataWrapper> getData() {
+		return data;
+	}
+
+	public void setData(List<ProgressDataWrapper> data) {
+		this.data = data;
 	}
 
 	public ImportParams getImportParams() {
@@ -45,19 +55,11 @@ public class Progress {
 		this.importParams = importParams;
 	}
 
-	public List<ProgressData> getData() {
-		return data;
+	public String getName() {
+		return name;
 	}
 
-	public void setData(List<ProgressData> data) {
-		this.data = data;
-	}
-
-	public List<ProgressData> getTestData() {
-		return testData;
-	}
-
-	public void setTestData(List<ProgressData> testData) {
-		this.testData = testData;
+	public void setName(String name) {
+		this.name = name;
 	}
 }

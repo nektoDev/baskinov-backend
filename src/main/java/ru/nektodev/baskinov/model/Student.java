@@ -15,7 +15,6 @@ public class Student implements Serializable {
 	private Task pronunciation;
 	private String dialect;
 	private Set<String> words;
-	private Progress progress;
 
 	@Override
 	public String toString() {
@@ -26,7 +25,6 @@ public class Student implements Serializable {
 				", pronunciation=" + pronunciation +
 				", dialect='" + dialect + '\'' +
 				", words=" + words +
-				", progress=" + progress +
 				'}';
 	}
 
@@ -40,13 +38,12 @@ public class Student implements Serializable {
 				Objects.equal(vocabulary, student.vocabulary) &&
 				Objects.equal(pronunciation, student.pronunciation) &&
 				Objects.equal(dialect, student.dialect) &&
-				Objects.equal(words, student.words) &&
-				Objects.equal(progress, student.progress);
+				Objects.equal(words, student.words);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(id, name, vocabulary, pronunciation, dialect, words, progress);
+		return Objects.hashCode(id, name, vocabulary, pronunciation, dialect, words);
 	}
 
 	public String getName() {
@@ -95,13 +92,5 @@ public class Student implements Serializable {
 
 	public void setWords(Set<String> words) {
 		this.words = words;
-	}
-
-	public Progress getProgress() {
-		return progress;
-	}
-
-	public void setProgress(Progress progress) {
-		this.progress = progress;
 	}
 }
