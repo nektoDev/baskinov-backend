@@ -1,27 +1,18 @@
-package ru.nektodev.baskinov.importer.impl;
+package ru.nektodev.baskinov.parser;
 
-import com.yandex.disk.rest.exceptions.ServerException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import ru.nektodev.baskinov.downloader.YandexDownloader;
-import ru.nektodev.baskinov.importer.HomeworkImporter;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@Service
-public class HomeworkImporterImpl implements HomeworkImporter {
+public class HomeworkParser {
 
-	@Autowired
-	private YandexDownloader downloader;
-
-	public Map<String, String> doImport(File file) throws IOException {
+	public static Map<String, String> doParse(File file) throws IOException {
 		Map<String, String> result = new HashMap<>();
 
 		Document document = Jsoup.parse(file, "utf8");

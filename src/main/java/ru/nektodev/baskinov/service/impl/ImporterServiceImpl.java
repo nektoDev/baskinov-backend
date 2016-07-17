@@ -4,8 +4,8 @@ import com.yandex.disk.rest.exceptions.ServerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.nektodev.baskinov.downloader.YandexDownloader;
-import ru.nektodev.baskinov.importer.HomeworkImporter;
 import ru.nektodev.baskinov.model.*;
+import ru.nektodev.baskinov.parser.HomeworkParser;
 import ru.nektodev.baskinov.repository.ProgressRepository;
 import ru.nektodev.baskinov.repository.StudentRepository;
 import ru.nektodev.baskinov.repository.WordRepository;
@@ -19,9 +19,6 @@ import java.util.*;
 
 @Service
 public class ImporterServiceImpl implements ImporterService {
-	@Autowired
-	private HomeworkImporter homeworkImporter;
-
 	@Autowired
 	private StudentRepository studentRepository;
 
@@ -143,7 +140,7 @@ public class ImporterServiceImpl implements ImporterService {
 		}
 
 		Map<String, Word> saveWords = new HashMap<>();
-		Map<String, String> pronunciationMap = homeworkImporter.doImport(file);
+		Map<String, String> pronunciationMap = HomeworkParser.doParse(file);
 		List<HomeworkWord> homeworkWords = new ArrayList<>();
 
 		pronunciationMap.forEach((title, pronunciation) -> {
@@ -173,7 +170,7 @@ public class ImporterServiceImpl implements ImporterService {
 			return;
 		}
 
-		Map<String, String> vocabularyMap = homeworkImporter.doImport(file);
+		Map<String, String> vocabularyMap = HomeworkParser.doParse(file);
 		List<HomeworkWord> homeworkWords = new ArrayList<>();
 
 		vocabularyMap.forEach((translation, title) -> {
