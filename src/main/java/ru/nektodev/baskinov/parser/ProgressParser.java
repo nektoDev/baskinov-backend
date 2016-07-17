@@ -69,7 +69,6 @@ public class ProgressParser {
 
 	private ProgressData getProgressData(Date date, String value) {
 		if (!value.matches("\\d.*%")) {
-			System.out.println(value);
 			return null;
 		}
 

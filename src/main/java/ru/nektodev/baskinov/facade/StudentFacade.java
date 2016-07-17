@@ -2,6 +2,7 @@ package ru.nektodev.baskinov.facade;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.nektodev.baskinov.model.ProgressDataWrapper;
 import ru.nektodev.baskinov.model.Student;
 import ru.nektodev.baskinov.service.StudentService;
 
@@ -38,6 +39,12 @@ public class StudentFacade {
 	public String clear() {
 		studentService.clear();
 		return "OK";
+	}
+
+	@RequestMapping(value = "/progress/{studentId}", method = RequestMethod.GET)
+	public List<ProgressDataWrapper> getProgress(@PathVariable String studentId) {
+
+		return studentService.getProgress(studentId);
 	}
 
 	private void reduceStudent(Student student) {

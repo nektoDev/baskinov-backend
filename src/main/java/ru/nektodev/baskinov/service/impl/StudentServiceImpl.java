@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.nektodev.baskinov.model.ImportParams;
+import ru.nektodev.baskinov.model.ProgressDataWrapper;
 import ru.nektodev.baskinov.model.Student;
 import ru.nektodev.baskinov.model.Task;
 import ru.nektodev.baskinov.repository.StudentRepository;
@@ -59,6 +60,11 @@ public class StudentServiceImpl implements StudentService {
 	@Override
 	public void clear() {
 		studentRepository.deleteAll();
+	}
+
+	@Override
+	public List<ProgressDataWrapper> getProgress(String studentId) {
+		return studentRepository.findOne(studentId).getProgress();
 	}
 
 	private Student generateStudent(String id, String name) {
