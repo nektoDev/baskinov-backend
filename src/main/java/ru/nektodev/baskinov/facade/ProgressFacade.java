@@ -26,8 +26,8 @@ public class ProgressFacade {
 		return progressService.getAllProgresses();
 	}
 
-	@RequestMapping(value = "/{studentId}", method = RequestMethod.GET)
-	public Progress getStudent(@PathVariable String progressId) {
+	@RequestMapping(value = "/{progressId}", method = RequestMethod.GET)
+	public Progress getProgress(@PathVariable String progressId) {
 		return progressService.getProgress(progressId);
 	}
 }
