@@ -59,6 +59,42 @@ public class ImporterServiceImpl implements ImporterService {
 		return "OK";
 	}
 
+	@Override
+	public String importPronunciationHomework(String studentId, File file) {
+		Student student = studentRepository.findOne(studentId);
+
+		try {
+			if (file == null) {
+				file = yandexDownloader.downloadFile(student.getVocabulary().getImportParams());
+			}
+
+			importPronunciationHomework(student, file);
+		} catch (IOException | ServerException | NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			return "ERROR";
+		}
+
+		return "OK";
+	}
+
+	@Override
+	public String importVocabularyHomework(String studentId, File file) {
+		Student student = studentRepository.findOne(studentId);
+
+		try {
+			if (file == null) {
+				file = yandexDownloader.downloadFile(student.getVocabulary().getImportParams());
+			}
+
+			importVocabularyHomework(student, file);
+		} catch (IOException | ServerException | NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			return "ERROR";
+		}
+
+		return "OK";
+	}
+
 	private void importHomework(Student student) throws IOException, ServerException, NoSuchAlgorithmException {
 		if (student.getPronunciation().getHomeworks() == null) {
 			student.getPronunciation().setHomeworks(new ArrayList<>());
@@ -80,8 +116,7 @@ public class ImporterServiceImpl implements ImporterService {
 		importPronunciationHomework(student, pronunciationFile);
 	}
 
-	@Override
-	public void importPronunciationHomework(Student student, File file) throws IOException, ServerException, NoSuchAlgorithmException {
+	private void importPronunciationHomework(Student student, File file) throws NoSuchAlgorithmException, IOException {
 		String hash = FileUtils.calculateFileHash(file);
 
 		if (student.getPronunciation().getHomeworks()
@@ -111,8 +146,7 @@ public class ImporterServiceImpl implements ImporterService {
 		wordRepository.save(saveWords.values());
 	}
 
-	@Override
-	public void importVocabularyHomework(Student student, File file) throws IOException, ServerException, NoSuchAlgorithmException {
+	private void importVocabularyHomework(Student student, File file) throws IOException, ServerException, NoSuchAlgorithmException {
 		Map<String, Word> saveWords = new HashMap<>();
 
 		String hash = FileUtils.calculateFileHash(file);

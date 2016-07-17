@@ -12,7 +12,6 @@ import ru.nektodev.baskinov.importer.HomeworkImporter;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,8 +21,7 @@ public class HomeworkImporterImpl implements HomeworkImporter {
 	@Autowired
 	private YandexDownloader downloader;
 
-	@Override
-	public Map<String, String> doImport(File file) throws IOException, ServerException, NoSuchAlgorithmException {
+	public Map<String, String> doImport(File file) throws IOException {
 		Map<String, String> result = new HashMap<>();
 
 		Document document = Jsoup.parse(file, "utf8");
