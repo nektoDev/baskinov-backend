@@ -213,7 +213,7 @@ public class ImporterServiceImpl implements ImporterService {
 
 			word.getTranslation().add(translation);
 			saveWords.put(title, word);
-			homeworkWords.add(new HomeworkWord(title, translation, title));
+			homeworkWords.add(new HomeworkWord(translation, title, title));
 		});
 
 		student.getVocabulary().getHomeworks().add(getHomework(homeworkWords, hash));
