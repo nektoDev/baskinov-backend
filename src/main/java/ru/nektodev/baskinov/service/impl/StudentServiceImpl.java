@@ -43,6 +43,9 @@ public class StudentServiceImpl implements StudentService {
 		slava.setDialect("UK");
 		daria.setDialect("UK");
 
+		slava.setProgressName("Slava_Dasha");
+		daria.setProgressName("Slava_Dasha");
+
 		List<Student> students = new ArrayList<>();
 		students.add(aydar);
 		students.add(slava);
