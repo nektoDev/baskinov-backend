@@ -1,4 +1,4 @@
-package ru.nektodev.baskinov.importer;
+package ru.nektodev.baskinov.homework.importer;
 
 import com.yandex.disk.rest.exceptions.ServerException;
 import ru.nektodev.baskinov.model.ImportData;

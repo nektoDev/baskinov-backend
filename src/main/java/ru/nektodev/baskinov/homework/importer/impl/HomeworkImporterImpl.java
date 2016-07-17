@@ -1,4 +1,4 @@
-package ru.nektodev.baskinov.importer.impl;
+package ru.nektodev.baskinov.homework.importer.impl;
 
 import com.yandex.disk.rest.Credentials;
 import com.yandex.disk.rest.RestClient;
@@ -9,7 +9,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.nektodev.baskinov.importer.HomeworkImporter;
+import ru.nektodev.baskinov.homework.importer.HomeworkImporter;
 import ru.nektodev.baskinov.model.ImportData;
 import ru.nektodev.baskinov.model.ImportParams;
 

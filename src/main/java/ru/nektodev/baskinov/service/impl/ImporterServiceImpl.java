@@ -3,7 +3,7 @@ package ru.nektodev.baskinov.service.impl;
 import com.yandex.disk.rest.exceptions.ServerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.nektodev.baskinov.importer.HomeworkImporter;
+import ru.nektodev.baskinov.homework.importer.HomeworkImporter;
 import ru.nektodev.baskinov.model.*;
 import ru.nektodev.baskinov.repository.StudentRepository;
 import ru.nektodev.baskinov.repository.WordRepository;
