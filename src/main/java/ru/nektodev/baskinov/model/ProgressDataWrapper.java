@@ -10,13 +10,15 @@ import java.util.List;
  */
 public class ProgressDataWrapper {
 	private String name;
+	private String student;
 	private List<ProgressData> values;
 
 	public ProgressDataWrapper() {
 	}
 
-	public ProgressDataWrapper(String name) {
+	public ProgressDataWrapper(String name, String student) {
 		this.name = name;
+		this.student = student;
 		this.values = new ArrayList<>();
 	}
 
@@ -24,6 +26,7 @@ public class ProgressDataWrapper {
 	public String toString() {
 		return "ProgressDataWrapper{" +
 				"name='" + name + '\'' +
+				", student='" + student + '\'' +
 				", values=" + values +
 				'}';
 	}
@@ -34,12 +37,13 @@ public class ProgressDataWrapper {
 		if (o == null || getClass() != o.getClass()) return false;
 		ProgressDataWrapper that = (ProgressDataWrapper) o;
 		return Objects.equal(name, that.name) &&
+				Objects.equal(student, that.student) &&
 				Objects.equal(values, that.values);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(name, values);
+		return Objects.hashCode(name, student, values);
 	}
 
 	public String getName() {
@@ -56,5 +60,13 @@ public class ProgressDataWrapper {
 
 	public void setValues(List<ProgressData> values) {
 		this.values = values;
+	}
+
+	public String getStudent() {
+		return student;
+	}
+
+	public void setStudent(String student) {
+		this.student = student;
 	}
 }

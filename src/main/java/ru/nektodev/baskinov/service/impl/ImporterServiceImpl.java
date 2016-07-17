@@ -112,18 +112,16 @@ public class ImporterServiceImpl implements ImporterService {
 		Progress progress = progressRepository.findOne(student.getProgressName());
 		try {
 			File file = yandexDownloader.downloadFile(progress.getImportParams());
-			ProgressDataWrapper[] progressDataWrappers = {null,
-					new ProgressDataWrapper("Dasha Pronunciation"),
-					new ProgressDataWrapper("Slava Pronunciation"),
-					new ProgressDataWrapper("Dasha Vocabulary"),
-					new ProgressDataWrapper("Slava Vocabulary"),
-					new ProgressDataWrapper("Dasha Test"),
-					new ProgressDataWrapper("Slava Test"),
-			};
-			ProgressDataWrapper[] progressDataWrappers1 = progressParser.doParse(file, progressDataWrappers);
-			progress.setData(Arrays.asList(progressDataWrappers1).stream().filter((v) -> v != null).collect(Collectors.toList()));
-			progressRepository.save(progress);
-			System.out.println(Arrays.toString(progressDataWrappers1));
+
+			ProgressDataWrapper[] progressDataWrappers = progressParser.doParse(file, progress.getImportParams().getProgressDataWrappers());
+
+			student.setProgress(Arrays.asList(progressDataWrappers)
+					.stream()
+					.filter((v) -> v != null)
+					.filter((v) -> v.getStudent().equalsIgnoreCase(student.getId()))
+					.collect(Collectors.toList()));
+
+			studentRepository.save(student);
 		} catch (IOException | ServerException e) {
 			e.printStackTrace();
 			return "ERROR";

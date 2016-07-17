@@ -4,6 +4,7 @@ import com.google.common.base.Objects;
 import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 public class Student implements Serializable {
@@ -15,6 +16,7 @@ public class Student implements Serializable {
 	private Task pronunciation;
 	private String dialect;
 	private String progressName;
+	private List<ProgressDataWrapper> progress;
 	private Set<String> words;
 
 	@Override
@@ -26,6 +28,7 @@ public class Student implements Serializable {
 				", pronunciation=" + pronunciation +
 				", dialect='" + dialect + '\'' +
 				", progressName='" + progressName + '\'' +
+				", progress=" + progress +
 				", words=" + words +
 				'}';
 	}
@@ -41,12 +44,22 @@ public class Student implements Serializable {
 				Objects.equal(pronunciation, student.pronunciation) &&
 				Objects.equal(dialect, student.dialect) &&
 				Objects.equal(progressName, student.progressName) &&
+				Objects.equal(progress, student.progress) &&
 				Objects.equal(words, student.words);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(id, name, vocabulary, pronunciation, dialect, progressName, words);
+		return Objects.hashCode(id, name, vocabulary, pronunciation, dialect, progressName, progress, words);
+	}
+
+	public List<ProgressDataWrapper> getProgress() {
+
+		return progress;
+	}
+
+	public void setProgress(List<ProgressDataWrapper> progress) {
+		this.progress = progress;
 	}
 
 	public String getName() {

@@ -3,23 +3,19 @@ package ru.nektodev.baskinov.model;
 import com.google.common.base.Objects;
 import org.springframework.data.annotation.Id;
 
-import java.util.List;
-
 /**
  * @author Slava Tsykin ts.slawa@gmail.com
  */
 public class Progress {
 	@Id
 	private String name;
-	private ImportParams importParams;
-	private List<ProgressDataWrapper> data;
+	private ImportParamsProgress importParams;
 
 	@Override
 	public String toString() {
 		return "Progress{" +
 				"name='" + name + '\'' +
 				", importParams=" + importParams +
-				", data=" + data +
 				'}';
 	}
 
@@ -29,29 +25,19 @@ public class Progress {
 		if (o == null || getClass() != o.getClass()) return false;
 		Progress progress = (Progress) o;
 		return Objects.equal(name, progress.name) &&
-				Objects.equal(importParams, progress.importParams) &&
-				Objects.equal(data, progress.data);
+				Objects.equal(importParams, progress.importParams);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(name, importParams, data);
+		return Objects.hashCode(name, importParams);
 	}
 
-	public List<ProgressDataWrapper> getData() {
-		return data;
-	}
-
-	public void setData(List<ProgressDataWrapper> data) {
-		this.data = data;
-	}
-
-	public ImportParams getImportParams() {
-
+	public ImportParamsProgress getImportParams() {
 		return importParams;
 	}
 
-	public void setImportParams(ImportParams importParams) {
+	public void setImportParams(ImportParamsProgress importParams) {
 		this.importParams = importParams;
 	}
 
