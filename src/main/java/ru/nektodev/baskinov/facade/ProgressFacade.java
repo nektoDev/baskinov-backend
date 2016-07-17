@@ -30,4 +30,9 @@ public class ProgressFacade {
 	public Progress getProgress(@PathVariable String progressId) {
 		return progressService.getProgress(progressId);
 	}
+
+	@RequestMapping(value = "/generate", method = RequestMethod.GET)
+	public List<Progress> generate() {
+		return progressService.generateProgress();
+	}
 }

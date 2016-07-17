@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.nektodev.baskinov.downloader.YandexDownloader;
 import ru.nektodev.baskinov.importer.HomeworkImporter;
 import ru.nektodev.baskinov.model.*;
+import ru.nektodev.baskinov.repository.ProgressRepository;
 import ru.nektodev.baskinov.repository.StudentRepository;
 import ru.nektodev.baskinov.repository.WordRepository;
 import ru.nektodev.baskinov.service.ImporterService;
@@ -23,6 +24,9 @@ public class ImporterServiceImpl implements ImporterService {
 
 	@Autowired
 	private StudentRepository studentRepository;
+
+	@Autowired
+	private ProgressRepository progressRepository;
 
 	@Autowired
 	private WordRepository wordRepository;
@@ -92,6 +96,19 @@ public class ImporterServiceImpl implements ImporterService {
 			return "ERROR";
 		}
 
+		return "OK";
+	}
+
+	@Override
+	public String importStudentProgress(String studentId) {
+		Student student = studentRepository.findOne(studentId);
+		Progress progress = progressRepository.findOne(student.getProgressName());
+		try {
+			yandexDownloader.downloadFile(progress.getImportParams());
+		} catch (IOException | ServerException e) {
+			e.printStackTrace();
+			return "ERROR";
+		}
 		return "OK";
 	}
 

@@ -15,16 +15,21 @@ public class ImporterFacade {
 	@Autowired
 	private ImporterService importer;
 
-	@RequestMapping(value = "/start", method = RequestMethod.GET)
-	public String getVocabulary(){
+	@RequestMapping(value = "/homework/start", method = RequestMethod.GET)
+	public String importAllHomeworks(){
 		return importer.importAllStudentsHomework();
 	}
 
-	@RequestMapping(value = "/start/{student}", method = RequestMethod.GET)
-	public String getVocabulary(@PathVariable String student){
-		return Strings.isNullOrEmpty(student) ?
+	@RequestMapping(value = "/homework/start/{studentId}", method = RequestMethod.GET)
+	public String importHomework(@PathVariable String studentId){
+		return Strings.isNullOrEmpty(studentId) ?
 				importer.importAllStudentsHomework() :
-				importer.importStudentHomework(student);
+				importer.importStudentHomework(studentId);
+	}
+
+	@RequestMapping(value = "/progress/start/{studentId}", method = RequestMethod.GET)
+	public String getVocabulary(@PathVariable String studentId){
+		return importer.importStudentProgress(studentId);
 	}
 
 }

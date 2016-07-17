@@ -7,6 +7,7 @@ import ru.nektodev.baskinov.model.Progress;
 import ru.nektodev.baskinov.repository.ProgressRepository;
 import ru.nektodev.baskinov.service.ProgressService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,15 +30,19 @@ public class ProgressServiceImpl implements ProgressService {
 	}
 
 	@Override
-	public Progress generateProgress() {
-		Progress result = new Progress();
+	public List<Progress> generateProgress() {
+		List<Progress> result = new ArrayList<>();
 
-		result.setName("Slava_Dasha");
+		Progress progress = new Progress();
+		progress.setName("Slava_Dasha");
 		ImportParams importParams = new ImportParams();
 		importParams.setPath("/progress/progress.pdf");
-		importParams.setPublicKey("DhLa7f6nRVrD8AZj9EGmFkyE8goTvQr0vPDb6WsdgtQ%3D");
-		result.setImportParams(importParams);
+		importParams.setPublicKey("jDY08AP3zoSUx80EWqOBhduCV9KPdOMM41xsUOmKI7o%3D");
+		progress.setImportParams(importParams);
 
+		result.add(progress);
+
+		progressRepository.save(result);
 		return result;
 	}
 }

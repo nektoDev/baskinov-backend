@@ -7,7 +7,10 @@ public interface ImporterService {
 
 	String importStudentHomework(String studentId);
 
+	String importStudentProgress(String studentId);
+
 	String importPronunciationHomework(String studentId, File file);
 
 	String importVocabularyHomework(String studentId, File file);
+
 }

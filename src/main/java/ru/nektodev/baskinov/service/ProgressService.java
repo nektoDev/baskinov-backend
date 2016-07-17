@@ -13,5 +13,5 @@ import java.util.List;
 public interface ProgressService {
 	Progress getProgress(String progressId);
 	List<Progress> getAllProgresses();
-	Progress generateProgress();
+	List<Progress> generateProgress();
 }
