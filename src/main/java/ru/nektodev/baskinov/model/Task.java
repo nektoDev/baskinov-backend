@@ -6,7 +6,7 @@ import org.springframework.data.annotation.Id;
 import java.io.Serializable;
 import java.util.List;
 
-public class Task implements Serializable, Cloneable {
+public class Task implements Serializable {
 
 	@Id
 	private String id;
