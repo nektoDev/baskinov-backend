@@ -16,4 +16,6 @@ public interface StudentService {
 	void clear();
 
 	List<ProgressDataWrapper> getProgress(String studentId);
+
+    void saveStudents(List<Student> students);
 }

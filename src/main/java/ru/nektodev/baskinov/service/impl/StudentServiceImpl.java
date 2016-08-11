@@ -67,6 +67,11 @@ public class StudentServiceImpl implements StudentService {
 		return studentRepository.findOne(studentId).getProgress();
 	}
 
+	@Override
+	public void saveStudents(List<Student> students) {
+		studentRepository.save(students);
+	}
+
 	private Student generateStudent(String id, String name) {
 		Student student = new Student();
 		student.setId(id);

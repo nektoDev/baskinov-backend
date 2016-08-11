@@ -30,6 +30,11 @@ public class StudentFacade {
 		return student;
 	}
 
+	@RequestMapping(value = "", method = RequestMethod.POST)
+	public void getStudent(@RequestBody List<Student> students) {
+		studentService.saveStudents(students);
+	}
+
 	@RequestMapping(value = "/generate", method = RequestMethod.GET)
 	public List<Student> generate() {
 		return studentService.generate();
