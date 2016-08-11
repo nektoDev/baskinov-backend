@@ -1,15 +1,21 @@
 package ru.nektodev.baskinov.model;
 
 import com.google.common.base.Objects;
+import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
 
 public class HomeworkWord implements Serializable {
 
+	@Id
+	private Integer id;
 	private String question;
 	private String answer;
 	private String wordId;
 	private Word word;
+
+	public HomeworkWord() {
+	}
 
 	public HomeworkWord(String question, String answer, String wordId) {
 		this.question = question;
@@ -20,7 +26,8 @@ public class HomeworkWord implements Serializable {
 	@Override
 	public String toString() {
 		return "HomeworkWord{" +
-				"question='" + question + '\'' +
+				"id='" + id + '\'' +
+				", question='" + question + '\'' +
 				", answer='" + answer + '\'' +
 				", wordId='" + wordId + '\'' +
 				", word=" + word +
@@ -32,7 +39,8 @@ public class HomeworkWord implements Serializable {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		HomeworkWord that = (HomeworkWord) o;
-		return Objects.equal(question, that.question) &&
+		return Objects.equal(id, that.id) &&
+				Objects.equal(question, that.question) &&
 				Objects.equal(answer, that.answer) &&
 				Objects.equal(wordId, that.wordId) &&
 				Objects.equal(word, that.word);
@@ -40,7 +48,7 @@ public class HomeworkWord implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(question, answer, wordId, word);
+		return Objects.hashCode(id, question, answer, wordId, word);
 	}
 
 	public String getQuestion() {
@@ -73,5 +81,13 @@ public class HomeworkWord implements Serializable {
 
 	public void setWord(Word word) {
 		this.word = word;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 }
