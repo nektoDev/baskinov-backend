@@ -36,7 +36,7 @@ public class PDFProgressParser extends AbstractProgressParser {
 				String[] elements = row.split(" ");
 				if (elements.length > 0) {
 					try {
-						Date date = sdf.parse(elements[0]);
+						Date date = parseDate(elements[0]);
 
 						for (int i = 1; i < elements.length; i++) {
 							String element = elements[i];

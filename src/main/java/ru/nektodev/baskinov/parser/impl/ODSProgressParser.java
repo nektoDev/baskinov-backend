@@ -24,7 +24,7 @@ public class ODSProgressParser  extends AbstractProgressParser{
 		List<TableTableRow> rows = doc.getBody().getOfficeSpreadsheets().get(0).getTables().get(0).getRows();
 		for (TableTableRow row : rows) {
 			try {
-				Date date = sdf.parse(row.getCellsInRange(0, 0)[0].getFullText());
+				Date date = parseDate(row.getCellsInRange(0, 0)[0].getFullText());
 
 				for (int i = 1; i < progressDataWrappers.length; i++) {
 					String element = row.getCellsInRange(i, i)[0].getFullText();
